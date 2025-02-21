@@ -54,9 +54,9 @@ export const TabCompArticles = ({ contrato, update }: Props) => {
     compuestos: [],
   })
 
-  const { response: autoCompleteData, loading: loadingAuto } = useFetch({
-    url: "/api/catalogue/articleCompose",
-  })
+  // const { response: autoCompleteData, loading: loadingAuto } = useFetch({
+  //   url: "/api/catalogue/articleCompose",
+  // })
 
   const { response: articulos, loading: loadingArti } = useFetch({
     url: "/api/inventory/inventory/get",
@@ -222,7 +222,7 @@ export const TabCompArticles = ({ contrato, update }: Props) => {
   }, [articulos])
 
 
-  if (loadingAuto || loadingArti) return <Spinner />
+  if (loadingArti) return <Spinner />
 
   return (
     <div>

@@ -10,15 +10,6 @@ export const Router = () => {
   const printRoutes = () => {
     return elements.map((route) => {
       if (route.state === isAuthenticated) {
-        if (route.submenus) {
-          return (
-            <Route key={route.route} path={route.route}>
-              {route.submenus.map((submenu) => {
-                return <Route key={submenu.route} path={submenu.route} element={<submenu.component />} />
-              })}
-            </Route>
-          )
-        }
         return (
           <Route
             key={route.route}

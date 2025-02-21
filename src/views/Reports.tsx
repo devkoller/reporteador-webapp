@@ -1,5 +1,4 @@
 import { Layout } from '@/components/auth'
-import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Inventario, Movimientos, CostoCompra, CostoVenta } from '@/components/Reports'
 

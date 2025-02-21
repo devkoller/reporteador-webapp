@@ -40,6 +40,7 @@ export const FormCheckBox = ({ control, name, label, description }: FormCheckBox
               </FormDescription>
             )}
           </div>
+          <FormMessage />
         </FormItem>
       )}
     />

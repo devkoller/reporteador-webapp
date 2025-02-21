@@ -10,11 +10,6 @@ export interface useFetchInterface {
   [key: string]: any
 }
 
-type VarsOptions = {
-  response: any
-  loading: boolean
-  error: any
-}
 
 export interface usePostInterface {
   url: string
