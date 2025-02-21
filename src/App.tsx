@@ -1,27 +1,22 @@
 import { ThemeProvider } from "@/context/theme-provider"
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+
+import { Router } from "@/routes/Router"
+import { store } from '@/store/store'
+import { Toaster } from "@/components/ui/toaster"
+
 
 function App() {
 
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <>
-        <div>
-          <a href="https://vite.dev" target="_blank">
-          </a>
-          <a href="https://react.dev" target="_blank">
-          </a>
-        </div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </>
-
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <Provider store={store}>
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
+      </Provider>
+      <Toaster />
     </ThemeProvider>
 
   )
