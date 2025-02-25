@@ -3,7 +3,7 @@ import { useFetch } from '@/hooks'
 import { useState, useEffect } from 'react'
 import { utils } from '@/utils'
 import { Spinner } from '@/components/ui/spinner'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 
 export const Home = () => {
