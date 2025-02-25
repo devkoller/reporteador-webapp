@@ -1,5 +1,5 @@
 import banner1 from '@/assets/images/meditiva/banner1.jpg'
-import { Shape1 } from '@/assets/images/SVGComponents/Shape1'
+import { Shape1 } from '@/assets/images/SVGComponents/Shapes'
 
 
 type BannerType = {

@@ -278,18 +278,6 @@ export const OC = ({ contrato, close, update }: Props) => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-3 items-end ">
               <FormInput
-                label="ID de pedido"
-                name="pedidoId"
-                control={form.control}
-                required
-              />
-              <FormInput
-                label="Número de orden"
-                name="noOrden"
-                control={form.control}
-                required
-              />
-              <FormInput
                 label="Condiciones de entrega"
                 name="condicionEntrega"
                 control={form.control}

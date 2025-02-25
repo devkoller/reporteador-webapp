@@ -10,9 +10,17 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
-
 type StateTypeof = {
   contrato: ContratoType | null
+  contratoDetalle: any[]
+  chart1: chart1Type[]
+  total: number
+}
+
+type chart1Type = {
+  type: string
+  value: number,
+  fill: string
 }
 
 
@@ -23,6 +31,9 @@ export const ContratoID = () => {
   const navigate = useNavigate()
   const [Data, setData] = useState<StateTypeof>({
     contrato: null,
+    contratoDetalle: [],
+    chart1: [],
+    total: 0
   })
 
 
@@ -33,6 +44,10 @@ export const ContratoID = () => {
     qs: {
       id: id
     }
+  })
+
+  const { response: contratoDetalle, loading: loadingDetalle } = useFetch({
+    url: `/api/contratos/detalle/${id}`,
   })
 
   const updateContrato = () => {
@@ -57,7 +72,7 @@ export const ContratoID = () => {
     {
       title: 'Contrato',
       value: 'contract',
-      content: <TabContrato contrato={Data.contrato} />
+      content: <TabContrato contrato={Data.contrato} chart1={Data.chart1} total={Data.total} />
     },
     {
       title: 'Cliente',
@@ -117,8 +132,35 @@ export const ContratoID = () => {
     }
   }, [contrato])
 
+  useEffect(() => {
+    if (contratoDetalle) {
+      let total = 0
+      let compra = 0
+      let ganancias = 0
+      contratoDetalle.data.map((item: any) => {
+        total += parseFloat(item.precioVenta)
+        compra += parseFloat(item.total)
+        ganancias += parseFloat(item.precioVenta) - parseFloat(item.total)
 
-  if (loading) {
+      })
+
+      let chart1: chart1Type[] = [
+        { type: 'buying', value: compra, fill: "var(--color-buying)" },
+        { type: 'gain', value: ganancias, fill: "var(--color-gain)" },
+      ]
+
+
+      setData(prev => ({
+        ...prev,
+        contratoDetalle: contratoDetalle.data,
+        chart1: chart1,
+        total: total
+      }))
+    }
+  }, [contratoDetalle])
+
+
+  if (loading || loadingDetalle) {
     return <Layout><Spinner /></Layout>
   }
 

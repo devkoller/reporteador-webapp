@@ -25,21 +25,28 @@ export const Inventario = () => {
       let totals = 0
       let totalItems = 0
 
-      const data = inventario.data.map((inv: any) => {
+      const data: any = []
 
-        const precio = parseFloat(inv.movimientoDetalle.precioSImp)
-        const total = parseFloat(inv.cantidad) * precio
 
-        totals += total
-        totalItems += parseInt(inv.cantidad)
+      inventario.data.map((inv: any) => {
 
-        return {
-          ...inv,
-          articulo: inv.catArticulo.nombre,
-          quantity: parseFloat(inv.cantidad).toFixed(2),
-          price: utils.formatCurrency(parseInt(precio.toFixed(2))),
-          total: utils.formatCurrency(parseInt(total.toFixed(2))),
+        if (inv.cantidad > 0) {
+          const precio = parseFloat(inv.movimientoDetalle.precioSImp)
+          const total = parseFloat(inv.cantidad) * precio
+
+          totals += total
+          totalItems += parseInt(inv.cantidad)
+
+          data.push({
+            ...inv,
+            articulo: inv.catArticulo.nombre,
+            quantity: parseFloat(inv.cantidad).toFixed(2),
+            price: utils.formatCurrency(parseInt(precio.toFixed(2))),
+            total: utils.formatCurrency(parseInt(total.toFixed(2))),
+          })
+
         }
+
       })
 
       setData(prev => (

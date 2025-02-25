@@ -38,7 +38,7 @@ export const Clients = () => {
             <img
               src={item.img}
               alt={item.alt}
-              className="text-black w-12/12 aspect-3/2 object-contain mix-blend-color-burn"
+              className="text-black w-full aspect-3/2 object-contain mix-blend-color-burn"
             />
           </div>
         </div>
@@ -63,7 +63,7 @@ export const Clients = () => {
         }}
         plugins={[
           Autoplay({
-            delay: 2000,
+            delay: 3000,
           }),
         ]}
       >

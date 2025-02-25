@@ -1,3 +1,4 @@
+import { FaCheck } from "react-icons/fa"
 const list = [
   {
     name: 'Columna'
@@ -42,17 +43,12 @@ export const About = () => {
         lg:w-5/12 ps-5
         relative
         text-xl
-        before:content-["\\2713"] before:text-white before:flex 
-        before:justify-center before:items-center
-        before:absolute
-        before:w-5 before:h-5
-        before:bg-meditiva
-        before:rounded-full
-        before:-left-1
-        before:top-1
       `}
           key={index}
         >
+          <span className="absolute bg-meditiva w-6 h-6 text-white rounded-full -left-2 top-1 flex justify-center items-center">
+            <FaCheck className='inline-block' />
+          </span>
           {item.name}
         </li>
       )

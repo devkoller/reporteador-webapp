@@ -1,0 +1,12 @@
+.animate-banner {
+	animation: banner 50s ease-in-out infinite alternate-reverse both;
+}
+
+@keyframes banner {
+	0% {
+		transform: scale(1);
+	}
+	100% {
+		transform: scale(1.5);
+	}
+}

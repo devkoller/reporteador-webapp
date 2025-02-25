@@ -127,9 +127,6 @@ export const TabOC = ({ contrato }: Props) => {
   }
 
   const showPDF = (row: OcDetalleType) => {
-    console.log("🚀 > showPDF > row:", row);
-
-    //abrir una nueva pestaña con el pdf
     window.open(`${API_URL}/api/orders/printPurchaseOrder/${row.id}`, '_blank')
 
   }

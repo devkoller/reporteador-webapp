@@ -9,6 +9,8 @@ import jabon from '@/assets/images/products/jabon.png'
 import laboratorio from '@/assets/images/products/laboratorio.png'
 import nebulizador from '@/assets/images/products/nebulizador.png'
 import vendaje from '@/assets/images/products/vendaje.png'
+import { FaCheck } from "react-icons/fa"
+
 
 
 const data = [
@@ -202,6 +204,9 @@ const _SingleService = ({ element, index }: SingleServiceProps) => {
                 before:top-1
           `}
             >
+              <span className="absolute text-meditiva w-6 h-6 rounded-full -left-2 top-1 flex justify-center items-center">
+                <FaCheck className='inline-block' />
+              </span>
               {item}
             </li>
           )
