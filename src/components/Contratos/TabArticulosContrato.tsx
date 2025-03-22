@@ -26,13 +26,14 @@ import { AddSimpleArticle } from './AddSimpleArticle'
 type Props = {
   contrato: ContratoType | null
   update: () => void
+  contratoDetalle: DetalleType[]
 }
 
 type StateTypeof = {
   data: DetalleType[]
 }
 
-export const TabArticulosContrato = ({ contrato, update }: Props) => {
+export const TabArticulosContrato = ({ contrato, contratoDetalle, update }: Props) => {
   const [open, setOpen] = useState(false)
   const { execute } = usePost()
   const { toast } = useToast()

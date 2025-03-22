@@ -193,7 +193,7 @@ export const TabOC = ({ contrato }: Props) => {
       )}
 
       {!Data.oc && (
-        <div className="h-full py-2">
+        <div className="container h-full py-2 max-w-full">
           <div className={`grid h-full items-stretch gap-6 ${Data.selectedRow ? 'md:grid-cols-[1fr_400px]' : ''}`}>
             <div className={`${Data.selectedRow ? 'flex' : 'hidden'} flex-col space-y-4 md:order-2`}>
               <Card>
@@ -212,7 +212,7 @@ export const TabOC = ({ contrato }: Props) => {
                 </CardHeader>
               </Card>
             </div>
-            <div className="md:order-1">
+            <div className="md:order-1 ">
               <DataTable
                 columns={columns}
                 data={Data.ocData}
@@ -226,3 +226,4 @@ export const TabOC = ({ contrato }: Props) => {
     </div>
   )
 }
+

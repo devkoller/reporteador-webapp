@@ -46,7 +46,18 @@ export const Home = () => {
     if (inventario) {
       let totals = 0
       let totalItems = 0
-      inventario.data.map((inv: any) => {
+      //eliminar articulos en el inventario con id dobles
+
+      console.log(inventario.data);
+
+
+      let iventario = inventario.data.filter((item: any, index: number, self: any) =>
+        index === self.findIndex((t: any) => (
+          t.articuloId === item.articuloId
+        ))
+      )
+
+      iventario.map((inv: any) => {
         if (inv.cantidad > 0) {
           const precio = parseFloat(inv.movimientoDetalle.precioSImp)
           const total = parseFloat(inv.cantidad) * precio
@@ -78,7 +89,6 @@ export const Home = () => {
         total += parseFloat(inv.precioSImp)
       })
 
-      console.log("🚀 > useEffect > total:", total);
 
       setData(prev => (
         {
@@ -121,7 +131,7 @@ export const Home = () => {
   return (
     <Layout>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-5">
-        <Card className='cursor-pointer'>
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Inventario
@@ -148,7 +158,7 @@ export const Home = () => {
             </p>
           </CardContent>
         </Card>
-        <Card className='cursor-pointer'>
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Costo de compra
@@ -175,7 +185,7 @@ export const Home = () => {
             </p>
           </CardContent>
         </Card>
-        <Card className='cursor-pointer'>
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Costo de venta

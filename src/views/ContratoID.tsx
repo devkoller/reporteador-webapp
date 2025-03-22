@@ -82,7 +82,7 @@ export const ContratoID = () => {
     {
       title: 'Salida de Articulos',
       value: 'articles',
-      content: <TabArticulosContrato contrato={Data.contrato} update={updateContrato} />
+      content: <TabArticulosContrato contrato={Data.contrato} contratoDetalle={Data.contratoDetalle} update={updateContrato} />
     },
     {
       title: 'Artículos compuestos',

@@ -145,7 +145,7 @@ export const CostoCompraColumns: ColumnDef<InventaryType>[] = [
   },
   {
     accessorKey: "price",
-    header: 'Precio Unitario',
+    header: 'Precio promedio',
   },
   {
     accessorKey: "total",
@@ -164,7 +164,7 @@ export const CostoVentaColumns: ColumnDef<InventaryType>[] = [
   },
   {
     accessorKey: "price",
-    header: 'Precio Unitario',
+    header: 'Precio promedio',
   },
   {
     accessorKey: "total",

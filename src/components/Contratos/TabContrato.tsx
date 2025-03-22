@@ -7,7 +7,6 @@ import {
 import { Pie, PieChart, } from "recharts"
 import { utils } from "@/utils"
 
-
 import {
   Card,
   CardContent,
@@ -21,6 +20,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend, ChartLegendContent
 } from "@/components/ui/chart"
 
 
@@ -62,25 +62,29 @@ export const TabContrato = ({ contrato, chart1, total }: Props) => {
         </PageHeaderDescription>
       </PageHeader>
 
-      <Card className="flex flex-col">
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Ganancias</CardTitle>
-          <CardDescription>{utils.formatCurrency(parseFloat(total.toFixed(2)))}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-1 pb-0">
-          <ChartContainer
-            config={chartConfig}
-            className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
-          >
-            <PieChart>
-              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-              <Pie data={chart1} dataKey="value" label nameKey="type" />
-            </PieChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter className="flex-col gap-2 text-sm">
-        </CardFooter>
-      </Card >
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-5">
+        <Card className="flex flex-col">
+          <CardHeader className="items-center pb-0">
+            <CardTitle>Ganancias del contrato</CardTitle>
+            <CardDescription>Venta total: {utils.formatCurrency(parseFloat(total.toFixed(2)))}</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 pb-0">
+            <ChartContainer
+              config={chartConfig}
+              className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+            >
+              <PieChart>
+                <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                <Pie data={chart1} dataKey="value" nameKey="type" />
+                <ChartLegend content={<ChartLegendContent />} />
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+          <CardFooter className="flex-col gap-2 text-sm">
+          </CardFooter>
+        </Card >
+      </div>
+
 
     </>
   )
