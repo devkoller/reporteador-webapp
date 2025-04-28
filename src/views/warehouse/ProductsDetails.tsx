@@ -59,7 +59,6 @@ export const ProductsDetails = () => {
 
   useEffect(() => {
     if (productData) {
-      console.log("🚀 > ProductsDetails.tsx:61 > useEffect > productData:", productData.data);
       setData(prev => ({
         ...prev,
         product: productData.data.product,

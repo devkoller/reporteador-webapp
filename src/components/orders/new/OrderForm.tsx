@@ -251,7 +251,6 @@ export function OrderForm({ type, entities, }: OrderFormProps) {
       url,
       body
     }).then((response) => {
-      console.log("🚀 > OrderForm.tsx:249 > onSubmit > response:", response);
       if (response.status === 200) {
         // form.reset()
         // setData((prev) => ({
@@ -322,6 +321,9 @@ export function OrderForm({ type, entities, }: OrderFormProps) {
 
       if (response.status === 200) {
         const products = response.data?.products
+
+        if (!products) return
+
         let data = products.map((product: ProductsType) => {
           return {
             ...product,
