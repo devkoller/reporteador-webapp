@@ -1,4 +1,6 @@
-import React from "react"
+
+
+import React, { forwardRef, useImperativeHandle } from "react"
 import {
   Column,
   ColumnDef,
@@ -14,7 +16,7 @@ import {
 import { rankItem } from '@tanstack/match-sorter-utils';
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 import {
   Table,
@@ -25,13 +27,16 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+export interface DataTableHandle<T> {
+  getSelectedRows?: () => T[];
+}
 
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  onRowClick?: (row: TData) => void
-  onRowDoubleClick?: (row: TData) => void
+interface DataTableProps<T> extends DataTableHandle<T> {
+  columns: ColumnDef<T>[]
+  data: T[]
+  onRowClick?: (row: T) => void
+  onRowDoubleClick?: (row: T) => void
+  pageSize?: number
 }
 
 declare module '@tanstack/react-table' {
@@ -53,12 +58,13 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed
 }
 
-export function DataTable<TData, TValue>({
+function DataTableComponent<T>({
   columns,
   data,
   onRowClick = () => { },
   onRowDoubleClick = () => { },
-}: DataTableProps<TData, TValue>) {
+  pageSize = 10,
+}: DataTableProps<T>, ref: React.Ref<DataTableHandle<T>>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
@@ -76,7 +82,19 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
     },
+    initialState: {
+      pagination: {
+        pageSize: pageSize,      // ← aquí pones las filas por página que quieras
+        pageIndex: 0,
+      },
+    },
   })
+
+  // Exponemos la función para obtener las filas seleccionadas
+  useImperativeHandle(ref, () => ({
+    getSelectedRows: () =>
+      table.getSelectedRowModel().flatRows.map((row) => row.original),
+  }));
 
 
   React.useEffect(() => {
@@ -129,30 +147,32 @@ export function DataTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                onClick={() => {
-                }}
-                onDoubleClick={() => {
-                  onRowDoubleClick(row.original)
-                }}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} onClick={() => {
-                    if (cell.column.id !== "actions") {
-                      table.toggleAllRowsSelected(false)
+            table.getRowModel().rows.map((row) => {
+              return (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  onClick={() => {
+                  }}
+                  onDoubleClick={() => {
+                    onRowDoubleClick(row.original)
+                  }}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} onClick={() => {
+                      if (cell.column.id !== "actions") {
+                        // table.toggleAllRowsSelected(false)
 
-                      row.toggleSelected()
-                      onRowClick(row.original)
-                    }
-                  }}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+                        // row.toggleSelected()
+                        onRowClick(row.original)
+                      }
+                    }}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              )
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
@@ -204,19 +224,52 @@ export function DataTable<TData, TValue>({
 }
 
 
-function Filter({ column }: { column: Column<any, unknown> }) {
-  const columnFilterValue = column.getFilterValue()
 
-  return (
-    <DebouncedInput
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-      onChange={value => column.setFilterValue(value)}
-      placeholder={`Buscar...`}
-      className="w-36 border shadow rounded"
-    />
-  )
+
+function Filter({ column }: { column: Column<any, unknown> }) {
+  // Determina el tipo de filtro configurado en la columna, por defecto es 'text'
+  const filterType = (column.columnDef as any)?.meta?.filterType || 'text';
+
+  if (filterType === 'select') {
+    // Para el select, obtenemos las opciones configuradas en la columna
+    const options = (column.columnDef as any)?.meta?.filterOptions || [];
+    return (
+      <>
+        <Select value={(column.getFilterValue() ?? '') as string} onValueChange={(value) => {
+          if (value === 'all') {
+            column.setFilterValue(undefined)
+          } else {
+            column.setFilterValue(value)
+          }
+        }}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Selecciona..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos</SelectItem>
+            {options.map((option: string) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </>
+    );
+  } else {
+    // Por defecto, se usa el input de texto con debounce
+    return (
+      <DebouncedInput
+        type="text"
+        value={(column.getFilterValue() ?? '') as string}
+        onChange={(value) => column.setFilterValue(value)}
+        placeholder={`Buscar...`}
+        className="w-36 border shadow rounded"
+      />
+    );
+  }
 }
+
 
 
 function DebouncedInput({
@@ -247,3 +300,10 @@ function DebouncedInput({
     <Input {...props} value={value} onChange={e => setValue(e.target.value)} />
   )
 }
+
+
+const DataTable = forwardRef(DataTableComponent) as <T>(
+  props: DataTableProps<T> & { ref?: React.Ref<DataTableHandle<T>> }
+) => JSX.Element;
+
+export { DataTable };

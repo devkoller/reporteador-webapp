@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { FormInput } from '@/components/Form'
-import { ClientType } from "./Columns"
+import { ClientType } from "@/types"
 import { usePost } from "@/hooks"
 import { useToast } from "@/hooks/use-toast"
 
@@ -63,7 +63,7 @@ export const FormClient = ({ selectedClient, update, closeSheet }: FormClientPro
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const url = selectedClient ? `/api/catalogue/client/${selectedClient.id}` : '/api/catalogue/client'
+    const url = selectedClient ? `/client/update` : '/client/create'
 
     let method = selectedClient ? "put" : "post"
 

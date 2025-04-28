@@ -9,7 +9,7 @@ import {
 
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "./redux.ts"
-import { loginService, updatePermissions } from "@/service/authService.ts"
+import { loginService } from "@/service/authService.ts"
 
 
 type startLogin = {
@@ -98,27 +98,27 @@ export const useAuthStore = () => {
   useEffect(() => {
     const checkAuth = async (session: any) => {
       try {
-        const result = await updatePermissions(session.token)
-        const data = await result.json()
+        // const result = await updatePermissions(session.token)
+        // const data = await result.json()
 
-        if (!result.ok) {
-          throw new Error("Error al actualizar permisos")
-        }
+        // if (!result.ok) {
+        //   throw new Error("Error al actualizar permisos")
+        // }
 
         dispatch(
           onLogin({
             ...session,
-            permisos: data.data,
+            // permisos: data.data,
           })
         )
 
       } catch (error) {
-        dispatch(
-          onLogin({
-            ...session,
-          })
-        )
-        // startLogout()
+        // dispatch(
+        //   onLogin({
+        //     ...session,
+        //   })
+        // )
+        startLogout()
       }
     }
 

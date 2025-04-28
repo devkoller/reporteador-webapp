@@ -1,66 +1,38 @@
 import fetchApi from "../api/fetchApi"
-import { useEffect, useState } from "react"
 import { useAuthStore } from "./useAuthStore"
+import { useQuery } from '@tanstack/react-query';
 
 export interface useFetchInterface {
-	url: string
-	qs?: any
-	token?: string
-	[key: string]: any
+  url: string
+  qs?: any
+  token?: string
+  [key: string]: any
 }
 
-type VarsOptions = {
-	response: any
-	loading: boolean
-	error: any
+
+export const useFetch = ({ url, qs }: useFetchInterface) => {
+  const { token } = useAuthStore()
+
+  // Definimos la clave de consulta, incorporando 'url' y 'qs'
+  const queryKey = ['fetchData', url, qs];
+
+  // Nuestro queryFn recibe un objeto que incluye 'signal' para la cancelación
+  const queryFn = async ({ signal }: { signal: AbortSignal }) => {
+    const res = await fetchApi.get({ url, qs, token, signal });
+    if (!res.ok) {
+      throw new Error(`Error fetching data. Status: ${res.status}`);
+    }
+    const json = await res.json();
+    return json;
+  };
+
+  const { data, isLoading, error, refetch } = useQuery({ queryKey, queryFn });
+
+  return {
+    response: data,
+    loading: isLoading,
+    error: error,
+    refetch: refetch,
+  }
 }
 
-const useFetch = ({ url, qs }: useFetchInterface) => {
-	const [vars, setVars] = useState<VarsOptions>({
-		response: null,
-		loading: false,
-		error: null,
-	})
-	const { token } = useAuthStore()
-
-	useEffect(() => {
-		const abortController = new AbortController()
-		const signal = abortController.signal
-
-		const fetchData = async () => {
-			setVars((e) => ({ ...e, loading: true }))
-			try {
-				const res = await fetchApi.get({ url, qs, signal, token })
-
-				if (!res.ok) {
-					throw res
-				}
-
-				const json = await res.json()
-
-				if (!signal.aborted) {
-					setVars((e) => ({ ...e, response: json, error: null }))
-				}
-			} catch (error) {
-				if (!signal.aborted) {
-					setVars((e) => ({ ...e, response: null, error: error }))
-				}
-			} finally {
-				if (!signal.aborted) {
-					setVars((e) => ({ ...e, loading: false }))
-				}
-			}
-		}
-		fetchData()
-
-		return () => abortController.abort()
-	}, [url, JSON.stringify(qs)])
-
-	return {
-		response: vars.response,
-		loading: vars.loading,
-		error: vars.error,
-	}
-}
-
-export default useFetch

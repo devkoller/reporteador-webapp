@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table"
+import { ClientType } from "@/types"
+
 import { MoreHorizontal } from "lucide-react"
-
-
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -12,19 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export type ClientType = {
-  id: number
-  nombre: string
-  rfc: string
-  telefono?: string
-  direccionCP?: string
-  direccionCalle?: string
-  direccionCiudad?: string
-  direccionPais?: string
-  razonSocial?: string
-  regimenFiscal?: string
-  representanteLegal?: string
-}
 
 
 export const Columns: ColumnDef<ClientType>[] = [

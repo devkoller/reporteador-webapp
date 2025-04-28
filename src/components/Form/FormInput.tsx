@@ -7,6 +7,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+
 
 type FormInputProps = {
   control: any
@@ -17,21 +19,27 @@ type FormInputProps = {
   password?: boolean
   required?: boolean
   disabled?: boolean
+  type?: string
+
 }
 
-export const FormInput = ({ control, label, name, description, password, placeholder, required, disabled }: FormInputProps) => {
+export const FormInput = ({ control, label, name, description, type, placeholder, required, ...props }: FormInputProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full">
           {label && <>
             <FormLabel>{label}</FormLabel>{' '}
             {required && <sup className="text-red-500">*</sup>}
           </>}
           <FormControl>
-            <Input placeholder={placeholder || ''} {...field} type={password ? 'password' : ''} disabled={disabled} />
+            {type === 'textarea' ? (
+              <Textarea placeholder={placeholder || ''} {...field} {...props} />
+            ) : (
+              <Input placeholder={placeholder || ''} {...field} type={type} {...props} />
+            )}
           </FormControl>
           {description && (
             <FormDescription>

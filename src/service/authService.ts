@@ -8,5 +8,9 @@ export const loginService = async (user: any) => {
 }
 
 export const updatePermissions = async (token: string) => {
-	return await fetchApi.get({ url: "/user/check-session", token })
+	return await fetchApi.get({ url: "/user/check-permissions", token })
+}
+
+export const userConfig = async (token: string) => {
+	return await fetchApi.get({ url: "/user/check-config", token })
 }

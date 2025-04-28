@@ -52,7 +52,7 @@ export const Inventario = () => {
       setData(prev => (
         {
           ...prev,
-          items: data,
+          items: inventario.data,
           total: utils.formatCurrency(parseInt(totals.toFixed(2))),
           totalItems: totalItems,
         }

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { Check, ChevronsUpDown } from "lucide-react"
+import { useState, useMemo } from 'react'
 
 type OptionsType = {
   label: string
@@ -37,19 +38,35 @@ type FormComboboxProps = {
   placeholder?: string
   required?: boolean
   option?: OptionsType[]
+  needFilter?: boolean
+  onChange?: (value: any) => void
   setValue: (name: any, value: any) => void
 }
 import { cn } from "@/lib/utils"
 
 
 
-export const FormCombobox = ({ control, label, name, description, required, option = [], setValue }: FormComboboxProps) => {
+export const FormCombobox = ({ control, label, name, description, required, needFilter, option = [], setValue, onChange }: FormComboboxProps) => {
+  const [filterText, setFilterText] = useState('')
+
+  const filteredOptions = useMemo(
+    () => {
+      if (!filterText && needFilter) return []
+      return option.filter(item => {
+        return item?.label?.toLowerCase().includes(filterText.toLowerCase())
+      }
+      )
+    },
+    [filterText, option]
+  )
+
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col w-full overflow-hidden">
+        <FormItem className="flex flex-col items-center max-w-full overflow-hidden space-y-4">
           {label && <FormLabel>{label}
             {required && <sup className="text-red-500">*</sup>}
           </FormLabel>}
@@ -60,15 +77,17 @@ export const FormCombobox = ({ control, label, name, description, required, opti
                   variant="outline"
                   role="combobox"
                   className={cn(
-                    "max-w-full justify-between",
-                    !field.value && "text-muted-foreground"
+                    "w-full truncate justify-between",
+                    !field.value && "text-muted-foreground truncate"
                   )}
                 >
-                  {field.value
-                    ? option.find(
-                      (item) => item.value === field.value
-                    )?.label
-                    : "Selecciona una opción"}
+                  <span className="w-96 flex justify-start truncate overflow-hidden">
+                    {field.value
+                      ? option.find(
+                        (item) => item.value === field.value
+                      )?.label
+                      : "Selecciona una opción"}
+                  </span>
                   <ChevronsUpDown className="opacity-50" />
                 </Button>
               </FormControl>
@@ -78,18 +97,22 @@ export const FormCombobox = ({ control, label, name, description, required, opti
                 <CommandInput
                   placeholder="Buscar..."
                   className="h-9"
+                  // Actualizamos el estado cuando el usuario escribe.
+                  value={filterText}
+                  onValueChange={setFilterText}
                 />
                 <CommandList>
                   <CommandEmpty>
                     No hay resultados.
                   </CommandEmpty>
                   <CommandGroup>
-                    {option.map((item) => (
+                    {filteredOptions.map((item) => (
                       <CommandItem
                         value={item.label}
                         key={item.value}
                         onSelect={() => {
                           setValue(name, item.value)
+                          onChange && onChange(item.value)
                         }}
                       >
                         {item.label}
@@ -108,9 +131,11 @@ export const FormCombobox = ({ control, label, name, description, required, opti
               </Command>
             </PopoverContent>
           </Popover>
-          <FormDescription>
-            {description}
-          </FormDescription>
+          {description && (
+            <FormDescription>
+              {description}
+            </FormDescription>
+          )}
           <FormMessage />
         </FormItem>
       )}

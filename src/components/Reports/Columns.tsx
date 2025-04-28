@@ -117,20 +117,17 @@ export type MovementsType = {
 
 export const InventoryColumns: ColumnDef<InventaryType>[] = [
   {
-    accessorKey: "articulo",
+    accessorKey: "nombre",
     header: 'Articulo',
   },
   {
-    accessorKey: "quantity",
-    header: 'Cantidad',
-  },
-  {
-    accessorKey: "price",
-    header: 'Precio Unitario',
-  },
-  {
-    accessorKey: "total",
-    header: 'Total',
+    accessorKey: "existencia",
+    header: 'Existencias',
+    cell: ({ row }) => {
+      const amount = parseInt(row.getValue("existencia"))
+
+      return <div className="text-center font-medium">{amount}</div>
+    },
   },
 ]
 

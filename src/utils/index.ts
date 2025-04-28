@@ -1,4 +1,4 @@
-import { routes } from "@/utils/routes/routes"
+import { routes } from "@/routes/routes"
 import utils from "./functions"
 
 export { routes, utils }

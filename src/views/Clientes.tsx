@@ -37,7 +37,7 @@ export const Clientes = () => {
   })
 
   const { response: clientsData, loading } = useFetch({
-    url: "/api/catalogue/client",
+    url: "/client/read/all",
   })
 
   const handleEdit = (client: ClientType) => {

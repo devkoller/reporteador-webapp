@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -5,15 +6,36 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { PermissionContext } from '@/context/PermissionContext';
+import { UserConfigContext } from '@/context/UserConfigContext';
 
-import { routes as menus } from "@/utils/routes/routes"
+
+
+import { routes as menus } from "@/routes/routes"
 import { Link } from "react-router-dom"
 
 export function NavMain() {
+  const { permissions } = useContext(PermissionContext);
+  const { config } = useContext(UserConfigContext);
+
 
   const print = () => {
     return menus.map((item, index) => {
       if (!item.menu) return
+      let menu = item.route.split("/")[1];
+
+      if (!config) {
+        return
+      }
+
+      let access = Array.isArray(permissions)
+        ? permissions.find((perm: any) => {
+          return perm.permission.resource === menu && perm.permission.action === "read" && perm.permission.enterpriseID === config.enterprise.id;
+        })
+        : undefined;
+
+      if (!access && item.needGrants) return
+
       return (
         <SidebarMenuItem key={index}>
           <Link to={item.route}>
@@ -24,41 +46,9 @@ export function NavMain() {
           </Link>
         </SidebarMenuItem>
       )
-      // if (!item.submenus) {
-      // } else {
-      //   return (
-      //     <Collapsible
-      //       key={index}
-      //       asChild
-      //       className="group/collapsible"
-      //     >
-      //       <SidebarMenuItem>
-      //         <CollapsibleTrigger asChild>
-      //           <SidebarMenuButton tooltip={item.title}>
-      //             {item.icon && <item.icon />}
-      //             <span>{item.title}</span>
-      //             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-      //           </SidebarMenuButton>
-      //         </CollapsibleTrigger>
-      //         <CollapsibleContent>
-      //           <SidebarMenuSub>
-      //             {item.submenus?.map((subItem) => (
-      //               <SidebarMenuSubItem key={subItem.title}>
-      //                 <SidebarMenuSubButton asChild>
-      //                   <Link to={`${item.route}/${subItem.route}`} key={subItem.title}>
-      //                     <span>{subItem.title}</span>
-      //                   </Link>
-      //                 </SidebarMenuSubButton>
-      //               </SidebarMenuSubItem>
-      //             ))}
-      //           </SidebarMenuSub>
-      //         </CollapsibleContent>
-      //       </SidebarMenuItem>
-      //     </Collapsible>
-      //   )
-      // }
     })
   }
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Plataforma</SidebarGroupLabel>

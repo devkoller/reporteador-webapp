@@ -3,6 +3,7 @@ import { Landing } from "@/views/Landing"
 import { useAuthStore } from "@/hooks"
 import { routes as elements } from "@/utils"
 import { Building } from "@/views/Building"
+import PrivateRoute from "./PrivateRoute"
 
 export const Router = () => {
   const { isAuthenticated } = useAuthStore()
@@ -14,7 +15,11 @@ export const Router = () => {
           <Route
             key={route.route}
             path={route.route}
-            element={<route.component />}
+            element={
+              <PrivateRoute path={route.route} needGrants={route.needGrants}>
+                <route.component />
+              </PrivateRoute>
+            }
           />
         )
       } else {

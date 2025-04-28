@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
+import { AlmacenType } from "@/types"
 
 
 import { Button } from "@/components/ui/button"
@@ -12,13 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export type AlmacenType = {
-  id: number
-  nombre: string
-  padre?: string
-  tipo?: number
-  descrip?: string
-}
 
 export const Columns: ColumnDef<AlmacenType>[] = [
   {

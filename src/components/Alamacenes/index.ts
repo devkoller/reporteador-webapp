@@ -1,5 +1,6 @@
-import { FormAlamacenes } from "./FormAlamacenes"
-import { AlmacenType, getColumns } from "./Columns"
+export * from "./FormAlamacenes"
+export * from "./Columns"
 
-export { FormAlamacenes, getColumns }
-export type { AlmacenType }
+export * from "./inventoryManage/TabInventory"
+export * from "./inventoryManage/TabTransfer"
+export * from "./inventoryManage/TabReorder"

@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
-
+import { UserType } from "@/types"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -12,18 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export type UserType = {
-  id: number
-  username: string
-  nombre: string
-  correo: string
-  persona: {
-    nombre: string
-    ape1: string
-    ape2?: string
-  }
-  typeFilter?: string
-}
 
 
 export const Columns: ColumnDef<UserType>[] = [
@@ -50,6 +38,8 @@ export const getColumns = (handleEdit: (user: UserType) => void, handleGrants: (
     {
       accessorKey: "actions",
       header: "Acciones",
+      enableColumnFilter: false,
+      enableSorting: false,
       cell: ({ row }: { row: any }) => {
 
         return (

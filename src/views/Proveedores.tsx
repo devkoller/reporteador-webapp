@@ -1,22 +1,12 @@
 import { Layout } from '@/components/auth'
 import { useEffect, useState } from 'react'
 import { DataTable } from '@/components/utils'
-import { getColumns, ProveedorType, FormProveedores } from '@/components/Proveedores'
-import { useFetch, usePost } from '@/hooks'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+import { getColumns } from '@/components/Proveedores'
+import { useFetch } from '@/hooks'
+import { Link, useNavigate } from 'react-router-dom'
+import { Plus } from "lucide-react"
+import { ProveedorType } from '@/types'
 
-import {
-  PageActions,
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/ui/page-header"
 import { Button } from "@/components/ui/button"
 import { FaSpinner } from "react-icons/fa";
 
@@ -27,12 +17,8 @@ type StateTypeof = {
   SheetType: number
 }
 
-
-
-
 export const Proveedores = () => {
-  const { execute } = usePost()
-  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
   const [Data, setData] = useState<StateTypeof>({
     proveedores: [],
     selectedProveedores: null,
@@ -41,49 +27,18 @@ export const Proveedores = () => {
   })
 
   const { response: proveedorData, loading } = useFetch({
-    url: "/api/catalogue/provider",
+    url: "/provider/read/all",
   })
 
   const handleEdit = (proveedor: ProveedorType) => {
-    setOpen(prev => !prev)
-    setData(prev => ({
-      ...prev,
-      selectedProveedores: proveedor,
-      SheetTitle: 'Editar Proveedor',
-    }))
+    navigate(`/provider/${proveedor.id}/edit`)
   }
 
-  const handleNewProveedor = () => {
-    setOpen(prev => !prev)
-    setData(prev => ({
-      ...prev,
-      selectedProveedores: null,
-      SheetTitle: 'Nuevo Proveedor',
-    }))
+  const goToDetails = (proveedor: ProveedorType) => {
+    navigate(`/provider/${proveedor.id}`)
   }
 
-  const handleSheet = () => {
-    setOpen(prev => !prev)
-  }
-
-  const update = () => {
-    execute({
-      url: "/user/list-users",
-      method: "get",
-    }).then((res) => {
-      if (res.status === 200) {
-        let data = res.data.map((user: { persona: { nombre: string; ape1: string; ape2?: string } }) => {
-          return {
-            ...user,
-            nombre: `${user?.persona?.nombre} ${user?.persona?.ape1}`,
-          }
-        })
-        setData(e => ({ ...e, users: data, }))
-      }
-    })
-  }
-
-  const columns = getColumns(handleEdit)
+  const columns = getColumns({ handleEdit, goToDetails })
 
   useEffect(() => {
     if (proveedorData) {
@@ -95,49 +50,31 @@ export const Proveedores = () => {
   }, [proveedorData])
   return (
     <Layout>
-      <PageHeader>
-        <PageHeaderHeading>Proveedores</PageHeaderHeading>
-        <PageHeaderDescription>
-          Aquí puedes ver, crear y editar los proveedores del sistema
-        </PageHeaderDescription>
-        <PageActions>
-          <Button onClick={handleNewProveedor}>
-            Nuevo proveedor
-          </Button>
-        </PageActions>
-      </PageHeader>
-
-      {loading && (
-        <div className="flex justify-center items-center h-64">
-          <FaSpinner className="animate-spin h-8 w-8" />
+      <div className="flex-1 space-y-4">
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">Administrador de proveedores</h2>
+          <div className="flex items-center space-x-2">
+            <Button asChild>
+              <Link to="/provider/new">
+                <Plus className="mr-2 h-4 w-4" />
+                Agregar proveedor
+              </Link>
+            </Button>
+          </div>
         </div>
-      )}
-      {!loading &&
-        <DataTable
-          data={Data.proveedores}
-          columns={columns}
-        />
-      }
 
-
-
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className=''>
-          <SheetHeader>
-            <SheetTitle>
-              {Data.SheetTitle}
-            </SheetTitle>
-            <SheetDescription>
-            </SheetDescription>
-          </SheetHeader>
-          <FormProveedores
-            selectedProveedor={Data.selectedProveedores}
-            update={update}
-            closeSheet={handleSheet}
+        {loading && (
+          <div className="flex justify-center items-center h-64">
+            <FaSpinner className="animate-spin h-8 w-8" />
+          </div>
+        )}
+        {!loading &&
+          <DataTable
+            data={Data.proveedores}
+            columns={columns}
           />
-
-        </SheetContent>
-      </Sheet>
+        }
+      </div>
     </Layout>
   )
 }

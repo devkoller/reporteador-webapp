@@ -3,12 +3,6 @@ import { useAuthStore } from "./useAuthStore"
 
 import fetchApi from "@/api/fetchApi"
 
-export interface useFetchInterface {
-  url: string
-  qs?: any
-  token?: string
-  [key: string]: any
-}
 
 
 export interface usePostInterface {
@@ -20,7 +14,7 @@ export interface usePostInterface {
 }
 
 
-const usePost = () => {
+export const usePost = () => {
   const { token } = useAuthStore()
   const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -83,4 +77,4 @@ const usePost = () => {
   }
 }
 
-export default usePost
+

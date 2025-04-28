@@ -1,8 +1,12 @@
-"use client"
-
-import * as React from "react"
-import { ChevronsUpDown, Plus } from "lucide-react"
-
+import { ChevronsUpDown, } from "lucide-react"
+import { EnterpriseType } from "@/types"
+import { API_URL } from "@/api/config"
+import { UserConfigContext } from '@/context/UserConfigContext';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,31 +22,48 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useFetch } from "@/hooks"
+import { useState, useEffect, useContext } from "react"
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
 
-export function TeamSwitcher({
-  teams,
-}: {
-  teams: {
-    name: string
-    logo: React.ElementType
-    plan: string
-  }[]
-}) {
+
+export function TeamSwitcher() {
   const { isMobile } = useSidebar()
-  const [activeTeam, setActiveTeam] = React.useState(teams[0])
-  const [open, setOpen] = React.useState(false)
+  const [enterprises, setEnterprises] = useState<EnterpriseType[]>([])
+  const { config, setValue, } = useContext(UserConfigContext);
 
-  const handleSheet = () => {
-    setOpen(prev => !prev)
-  }
+  const { response: enterprisesData } = useFetch({
+    url: "/enterprise/read/combo",
+  })
+
+  useEffect(() => {
+    if (enterprisesData) {
+      if (!config || !config.enterprise) {
+        setValue('enterprise', enterprisesData.data[0])
+      }
+      setEnterprises(enterprisesData.data)
+    }
+  }, [enterprisesData])
+
+  useEffect(() => {
+    if (enterprisesData) {
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (/[1-9]/.test(event.key) && (event.metaKey || event.ctrlKey)) {
+          event.preventDefault();
+          const index = parseInt(event.key);
+          const enter = enterprises.find((e) => e.id === index);
+
+          if (enter) {
+            setValue('enterprise', enter);
+          }
+        }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [enterprisesData, enterprises]);
+
 
   return (
     <>
@@ -54,15 +75,22 @@ export function TeamSwitcher({
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <activeTeam.logo className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {activeTeam.name}
-                  </span>
-                  <span className="truncate text-xs">{activeTeam.plan}</span>
-                </div>
+                {(config && config.enterprise) && (
+                  <>
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarImage src={`${API_URL}/enterprise/img/${config.enterprise.id}`} alt={config.enterprise.descripcion || ''} />
+                      <AvatarFallback className="rounded-lg">{config.enterprise.descripcion ? `${config.enterprise.descripcion}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">
+                        {config.enterprise.descripcion}
+                      </span>
+                      <span className="truncate text-xs">
+                        {/* {activeTeam.plan} */}
+                      </span>
+                    </div>
+                  </>
+                )}
                 <ChevronsUpDown className="ml-auto" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
@@ -75,43 +103,28 @@ export function TeamSwitcher({
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 Corporativo
               </DropdownMenuLabel>
-              {teams.map((team, index) => (
+
+              {enterprises.map((team, index) => (
                 <DropdownMenuItem
-                  key={team.name}
-                  onClick={() => setActiveTeam(team)}
+                  key={index}
+                  onClick={() => {
+                    setValue('enterprise', team)
+                  }}
                   className="gap-2 p-2"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-sm border">
-                    <team.logo className="size-4 shrink-0" />
-                  </div>
-                  {team.name}
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={`${API_URL}/enterprise/img/${team.id}`} alt={team.descripcion || ''} />
+                    <AvatarFallback className="rounded-lg">{team.descripcion ? `${team.descripcion}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
+                  </Avatar>
+                  {team.descripcion}
                   <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2 p-2" onClick={handleSheet}>
-                <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                  <Plus className="size-4" />
-                </div>
-                <div className="font-medium text-muted-foreground">
-                  Crear nueva empresa
-                </div>
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>
-              Nuevo empresa
-            </SheetTitle>
-            <SheetDescription>
-            </SheetDescription>
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { AlmacenType } from "./Columns"
+import { AlmacenType } from "@/types"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"

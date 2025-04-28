@@ -33,7 +33,7 @@ type StateTypeof = {
   data: DetalleType[]
 }
 
-export const TabArticulosContrato = ({ contrato, contratoDetalle, update }: Props) => {
+export const TabArticulosContrato = ({ contrato, update }: Props) => {
   const [open, setOpen] = useState(false)
   const { execute } = usePost()
   const { toast } = useToast()
