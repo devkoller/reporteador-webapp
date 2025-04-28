@@ -11,6 +11,17 @@ export const Router = () => {
   const printRoutes = () => {
     return elements.map((route) => {
       if (route.state === isAuthenticated) {
+        if (route.state === "Not Authenticated") {
+          return (
+            <Route
+              key={route.route}
+              path={route.route}
+              element={
+                <route.component />
+              }
+            />
+          )
+        }
         return (
           <Route
             key={route.route}
