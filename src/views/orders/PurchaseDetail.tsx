@@ -11,7 +11,7 @@ export const PurchaseDetail = () => {
   const { id } = useParams()
   const [purchaseOrder, setPurchaseOrder] = useState<PurchaseOrderType | null>(null)
 
-  const { response: purchaseOrderData, loading } = useFetch({
+  const { response: purchaseOrderData, loading, refetch } = useFetch({
     url: "/order/read/purchase/" + id,
   })
 
@@ -45,6 +45,7 @@ export const PurchaseDetail = () => {
           backUrl='/order'
           type='purchase'
           order={purchaseOrder as PurchaseOrderType}
+          refetch={refetch}
         />
       )}
     </Layout>

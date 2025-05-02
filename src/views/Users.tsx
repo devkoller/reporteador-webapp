@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Layout } from '@/components/auth'
 import { DataTable } from '@/components/utils'
-import { getColumns, UserType, FormUser, Grants } from '@/components/Users'
+import { getColumns, FormUser, Grants } from '@/components/Users'
+import { UserType } from '@/types'
 import { useFetch, usePost } from '@/hooks'
 import {
   Sheet,

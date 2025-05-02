@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Layout } from '@/components/auth'
 import { DataTable } from '@/components/utils'
-import { getColumns, ClientType, FormClient } from '@/components/Clients'
+import { getColumns, FormClient } from '@/components/Clients'
 import { useFetch, usePost } from '@/hooks'
 import {
   Sheet,
@@ -10,6 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
+import { ClientType } from '@/types'
 
 import {
   PageActions,

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { FormInput } from '@/components/Form'
-import { UserType } from "./Columns"
+import { UserType } from "@/types"
 import { usePost } from "@/hooks"
 import { useToast } from "@/hooks/use-toast"
 

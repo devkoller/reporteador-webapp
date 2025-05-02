@@ -1,8 +1,8 @@
 import { Layout, } from '@/components/auth'
 import { useState, useEffect, useContext } from "react"
-// import { Link } from "react-router-dom"
-// import { Plus } from "lucide-react"
-// import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom"
+import { Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserConfigContext } from '@/context/UserConfigContext';
 import { useFetch } from '@/hooks';
@@ -47,14 +47,14 @@ export const Inventory = () => {
         <div className="flex-1 space-y-4">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Administrador de inventario</h2>
-            {/* <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <Button asChild>
                 <Link to="/inventory/add">
                   <Plus className="mr-2 h-4 w-4" />
                   Agregar articulo
                 </Link>
               </Button>
-            </div> */}
+            </div>
           </div>
 
           <Card>

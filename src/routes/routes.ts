@@ -3,38 +3,40 @@ import { Login } from "@/views/Login"
 import { RecoveryPassword } from "@/views/RecoveryPassword"
 import { Home } from "@/views/Home"
 
-import { Enterprise } from "@/views/Enterprise"
+import { Enterprise } from "@/views/enterprise/Enterprise"
 import { NewEnterprisePage } from "@/views/enterprise/NewEnterprisePage"
 import { EnterpriseDetails } from "@/views/enterprise/EnterpriseDetails"
 
-import { Inventory } from "@/views/Inventory"
+import { Inventory } from "@/views/inventory/Inventory"
+import { AddProduct } from "@/views/inventory/AddProduct"
 
-import { Almacenes } from "@/views/Almacenes"
+import { Almacenes } from "@/views/warehouse/Almacenes"
 import { WarehouseId } from "@/views/warehouse/WarehouseId"
 import { WarehouseEdit } from "@/views/warehouse/WarehouseEdit"
 import { InventoryManage } from "@/views/warehouse/InventoryManage"
 import { ProductsDetails } from "@/views/warehouse/ProductsDetails"
 
-import { Proveedores } from "@/views/Proveedores"
+import { Proveedores } from "@/views/provider/Proveedores"
 import { NewProviderPage } from "@/views/provider/NewProviderPage"
 import { ProviderDetails } from "@/views/provider/ProviderDetails"
 import { ManagesProducts } from "@/views/provider/ManageProducts"
 
-import { OrdersOverview } from "@/views/OrdersOverview"
+import { OrdersOverview } from "@/views/orders/OrdersOverview"
 import { CreatePurchaseOrder } from "@/views/orders/CreatePurchaseOrder"
 import { CreateSellingOrder } from "@/views/orders/CreateSellingOrder"
 import { PurchaseDetail } from "@/views/orders/PurchaseDetail"
 import { SellingDetail } from "@/views/orders/SellingDetail"
 
-import { Services } from "@/views/Services"
+import { Services } from "@/views/service/Services"
 import { NewService } from "@/views/service/NewService"
 
-// import { Reports } from "@/views/Reports"
-// import { Contratos } from "@/views/Contratos"
+import { Contracts } from "@/views/contracts/Contracts"
+import { ContractNew } from "@/views/contracts/ContractNew"
+import { ContractDetails } from "@/views/contracts/ContractDetails"
+
 import { Users } from "@/views/Users"
-import { Clientes } from "@/views/Clientes"
+import { Clientes } from "@/views/client/Clientes"
 import { UserProfile } from "@/views/UserProfile"
-// import { ContratoID } from "@/views/ContratoID"
 
 import {
 	Building2,
@@ -46,13 +48,13 @@ import {
 	UserCircle,
 	ShoppingCart,
 	Wrench,
+	FileText,
 	// ClipboardList,
 	// LogOut,
 	// ChevronDown,
 	// ArrowUpCircle,
 	// ArrowDownCircle,
 	// BarChart3,
-	// FileText,
 	// CheckCircle,
 	// Clock,
 } from "lucide-react"
@@ -163,6 +165,26 @@ const inventoryRoutes = [
 		needGrants: true,
 		menu: true,
 		icon: Package,
+	},
+	{
+		route: "/inventory/add",
+		component: AddProduct,
+		title: "Proveedores",
+		state: "Authenticated",
+		breadcrumb: "Inventario",
+		needGrants: true,
+		menu: false,
+		icon: Building2,
+	},
+	{
+		route: "/inventory/edit/:id",
+		component: AddProduct,
+		title: "Proveedores",
+		state: "Authenticated",
+		breadcrumb: "Inventario",
+		needGrants: true,
+		menu: false,
+		icon: Building2,
 	},
 ]
 
@@ -308,18 +330,63 @@ const ordersRoutes = [
 	},
 ]
 
+const contractRoutes = [
+	{
+		route: "/contract",
+		component: Contracts,
+		title: "Contratos",
+		state: "Authenticated",
+		breadcrumb: "Inventario",
+		needGrants: true,
+		menu: true,
+		icon: FileText,
+	},
+	{
+		route: "/contract/new",
+		component: ContractNew,
+		title: "Proveedores",
+		state: "Authenticated",
+		breadcrumb: "Inventario",
+		needGrants: true,
+		menu: false,
+		icon: FileText,
+	},
+	{
+		route: "/contract/edit/:id",
+		component: ContractNew,
+		title: "Proveedores",
+		state: "Authenticated",
+		breadcrumb: "Inventario",
+		needGrants: true,
+		menu: false,
+		icon: FileText,
+	},
+	{
+		route: "/contract/:id",
+		component: ContractDetails,
+		title: "Proveedores",
+		state: "Authenticated",
+		breadcrumb: "Inventario",
+		needGrants: true,
+		menu: false,
+		icon: FileText,
+	},
+]
+
 export const routes = [
 	{
 		route: "/login",
 		component: Login,
 		state: "Not Authenticated",
 		menu: false,
+		icon: UserCircle,
 	},
 	{
 		route: "/recovery-password",
 		component: RecoveryPassword,
 		state: "Not Authenticated",
 		menu: false,
+		icon: UserCircle,
 	},
 	{
 		route: "/home",
@@ -345,7 +412,8 @@ export const routes = [
 	...clientRoutes,
 	//orders
 	...ordersRoutes,
-
+	//contracts
+	...contractRoutes,
 	{
 		route: "/usuarios",
 		component: Users,

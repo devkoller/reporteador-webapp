@@ -4,7 +4,7 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/ui/page-header"
-import { ProveedorType } from '@/components/Proveedores'
+import { ProveedorType } from '@/types'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { useState, useEffect } from 'react'
 import { Input } from "../ui/input"

@@ -32,7 +32,6 @@ export const FormInput = ({ control, label, name, description, type, placeholder
         <FormItem className="w-full">
           {label && <>
             <FormLabel>{label}</FormLabel>{' '}
-            {required && <sup className="text-red-500">*</sup>}
           </>}
           <FormControl>
             {type === 'textarea' ? (

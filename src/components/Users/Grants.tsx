@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useFetch, usePost } from '@/hooks'
-import { UserType } from '@/components/Users'
+import { UserType } from '@/types'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"

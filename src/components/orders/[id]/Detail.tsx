@@ -8,18 +8,47 @@ import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { SellingOrderType, PurchaseOrderType } from "@/types"
 import { format } from "date-fns"
+import { RecordShipments } from "./RecordShipments"
+import { usePost } from "@/hooks"
 
 
 interface DetailProps {
   backUrl: string
   type: "selling" | "purchase"
   order: SellingOrderType | PurchaseOrderType
+  refetch?: () => void
 
 }
 
-export const Detail = ({ backUrl, type, order }: DetailProps) => {
+export const Detail = ({ backUrl, type, order, refetch }: DetailProps) => {
+  const { execute, loading } = usePost()
 
   const quantityItems = order.details.reduce((acc, item) => acc + item.quantity, 0)
+
+  const printOrder = async () => {
+    let url = type === "selling" ? "/order/print/selling/" : "/order/print/purchase/"
+    url += order.id
+    execute({
+      url,
+      method: "get",
+    }).then(response => {
+      if (response.status === 200) {
+        const byteCharacters = atob(response.data)
+        const byteNumbers = new Uint8Array(byteCharacters.length)
+
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i)
+        }
+
+        const blob = new Blob([byteNumbers], { type: "application/pdf" })
+        const blobURL = URL.createObjectURL(blob)
+
+        // Abrir en una nueva pestaña
+        window.open(blobURL, "_blank")
+      }
+    })
+  }
+
 
   return (
     <div className="flex flex-col">
@@ -53,17 +82,12 @@ export const Detail = ({ backUrl, type, order }: DetailProps) => {
                     : "Cancelada"}
             </Badge>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline">
+          <div className="flex items-center space-x-4">
+            <Button variant="outline" disabled={loading} onClick={printOrder}>
               <Printer className="mr-2 h-4 w-4" />
               Imprimir orden
             </Button>
-            {/* <Button asChild>
-              <Link to={backUrl}>
-                <Edit className="mr-2 h-4 w-4" />
-                Editar orden
-              </Link>
-            </Button> */}
+            <RecordShipments type={type} order={order} refetch={refetch} />
           </div>
         </div>
 

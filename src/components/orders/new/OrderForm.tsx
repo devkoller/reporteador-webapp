@@ -424,18 +424,13 @@ export function OrderForm({ type, entities, }: OrderFormProps) {
                   <CardTitle>Productos de la orden</CardTitle>
                   <CardDescription>Agrega productos a esta orden.</CardDescription>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   <CompositeProductManager
                     products={Data.products}
                     services={Data.services}
                     type={type}
                     enterpriseID={config?.enterprise?.id}
                     entityID={entityID}
-                  // compositeProducts={compositeProducts}
-                  // onSave={handleSaveCompositeProduct}
-                  // onSelect={handleCompositeProductSelect}
-                  // buttonVariant="outline"
-                  // buttonText="Manage Packages"
                   />
                   <Button
                     type="button"
@@ -547,59 +542,6 @@ export function OrderForm({ type, entities, }: OrderFormProps) {
                                     onChange={(value) => handleProductChange(index, value, isService)}
                                     required
                                   />
-                                  {/* {type === "sales" ? (
-                                  ) : (
-                                    <FormField
-                                      control={form.control}
-                                      name={`items.${index}.productID`}
-                                      render={({ field }) => (
-                                        <FormItem className="space-y-0">
-                                          <Select
-                                            onValueChange={(value) => {
-                                              field.onChange(value)
-                                              handleProductChange(index, value, isService)
-                                            }}
-                                            defaultValue={field.value.toString()}
-                                          >
-                                            <FormControl>
-                                              <SelectTrigger>
-                                                <SelectValue
-                                                  placeholder={isService ? "Selecciona un servicio" : "Selecciona un producto"}
-                                                />
-                                              </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                              {isService
-                                                ? Data.services.map((service) => (
-                                                  <SelectItem key={service.id} value={service.id.toString()}>
-                                                    <div className="flex items-center">
-                                                      <Wrench className="mr-2 h-4 w-4" />
-                                                      <span>
-                                                        {service.name} ({service.categoryName})
-                                                      </span>
-                                                    </div>
-                                                  </SelectItem>
-                                                ))
-                                                : Data.products.map((product) => (
-                                                  <SelectItem key={product.id} value={product.id.toString()}>
-                                                    <div className="flex items-center">
-                                                      <Package className="mr-2 h-4 w-4" />
-                                                      <span>
-                                                        {product.nombre} ({product.SKU})
-                                                      </span>
-                                                    </div>
-                                                  </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                          </Select>
-                                          <FormMessage />
-                                        </FormItem>
-                                      )}
-                                    />
-                                  )} */}
-
-
-
                                 </TableCell>
                                 <TableCell>
                                   {isService ? (

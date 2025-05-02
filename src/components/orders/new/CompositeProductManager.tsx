@@ -192,9 +192,9 @@ export function CompositeProductManager({
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-1 border rounded-md p-4">
+          {/* <div className="md:col-span-1 border rounded-md p-4">
             <h3 className="font-medium mb-2">Paquetes guardados</h3>
-            {/* {compositeProducts.length === 0 ? (
+            {compositeProducts.length === 0 ? (
               <p className="text-sm text-muted-foreground">Aún no hay paquetes.</p>
             ) : (
               <div className="space-y-2">
@@ -229,10 +229,10 @@ export function CompositeProductManager({
                   </div>
                 ))}
               </div>
-            )} */}
-          </div>
+            )}
+          </div> */}
 
-          <div className="md:col-span-2">
+          <div className="md:col-span-3">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 

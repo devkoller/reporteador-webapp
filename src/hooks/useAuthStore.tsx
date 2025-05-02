@@ -34,7 +34,10 @@ export const useAuthStore = () => {
   const {
     id,
     username,
+    fullname,
     name,
+    lastName1,
+    lastName2,
     correo,
     telefono,
     permisos,
@@ -64,7 +67,10 @@ export const useAuthStore = () => {
       const session = {
         id: data.id,
         username: data.username,
+        fullname: data.fullname,
         name: data.name,
+        lastName1: data.lastName1,
+        lastName2: data.lastName2,
         correo: data.correo,
         telefono: data.telefono,
         keepSessionOpen: data.keepSessionOpen,
@@ -142,7 +148,10 @@ export const useAuthStore = () => {
   return {
     id,
     username,
+    fullname,
     name,
+    lastName1,
+    lastName2,
     correo,
     telefono,
     token,

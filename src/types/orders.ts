@@ -53,3 +53,8 @@ export interface SellingDetailsType extends OrderDetailsType {
 export interface PurchaseDetailsType extends OrderDetailsType {
 	purchaseOrderID: number
 }
+
+export interface RecordsShippingType extends OrderDetailsType {
+	receivedQuantity: number
+	quantityToSave: number
+}

@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { FaTrash, FaFilePdf } from 'react-icons/fa'
-import { ProveedorType } from '@/components/Proveedores'
+import { ProveedorType } from '@/types'
 
 
 export type ContratoType = {

@@ -3,7 +3,7 @@ import { ContratoType, catArticuloType, getCotizaColumns, ArtiCotizacionType } f
 import { usePost, useFetch } from "@/hooks"
 import { DataTable } from '@/components/utils'
 import { PrintProviders } from './PrintProviders'
-import { ProveedorType } from '@/components/Proveedores'
+import { ProveedorType } from '@/types'
 import { Spinner } from '@/components/ui/spinner'
 import { ArticlesCotiza } from './ArticlesCotiza'
 import {

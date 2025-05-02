@@ -13,9 +13,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Link } from "react-router-dom"
 
 export interface inventoryTransferType extends InventoryType {
   transfer: string
+}
+
+const productCategories = {
+  1: 'Medicamento',
+  2: 'Material',
+  3: 'Equipo',
+  4: 'Instrumento',
+  5: 'Otros',
 }
 
 
@@ -44,11 +53,19 @@ export const Columns: ColumnDef<InventoryType>[] = [
     }
   },
   {
-    accessorKey: "categoria",
+    accessorKey: "categoryID",
     header: "Categoría",
     meta: {
       filterType: 'select',
     },
+    cell: ({ row }) => {
+      let category = parseInt(row.original.categoryID)
+      return (
+        <div className="flex items-center space-x-2">
+          <span>{productCategories[category as keyof typeof productCategories]}</span>
+        </div>
+      )
+    }
   },
   {
     accessorKey: "warehouseName",
@@ -100,6 +117,36 @@ export const Columns: ColumnDef<InventoryType>[] = [
         </div>
       )
     }
+  },
+  {
+    accessorKey: "actions",
+    header: "Acciones",
+    enableColumnFilter: false,
+    enableSorting: false,
+    cell: ({ row }: { row: any }) => {
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Abrir menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+            <DropdownMenuItem
+              asChild
+            >
+              <Link to={`/inventory/edit/${row.original.productID}`}>
+                Editar
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
   },
 ]
 

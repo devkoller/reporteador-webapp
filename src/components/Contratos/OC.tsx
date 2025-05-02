@@ -7,7 +7,7 @@ import {
 } from "./Columns"
 import { usePost, useFetch } from "@/hooks"
 import { PrintProviders } from './PrintProviders'
-import { ProveedorType } from '@/components/Proveedores'
+import { ProveedorType } from '@/types'
 import {
   PageHeader,
   PageHeaderDescription,
