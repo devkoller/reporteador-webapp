@@ -1,6 +1,6 @@
 
 
-import React, { forwardRef, useImperativeHandle } from "react"
+import React, { forwardRef, useImperativeHandle, useMemo } from "react"
 import {
   Column,
   ColumnDef,
@@ -182,43 +182,50 @@ function DataTableComponent<T>({
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center border-t justify-between space-x-2 py-4 px-2" >
-        <div>
-          <p className="flex items-center gap-1">
-            <span>Pagina</span>
-            <strong>
-              {table.getState().pagination.pageIndex + 1} de{' '}
-              {table.getPageCount().toLocaleString()}
-            </strong>
-          </p>
-          <p>
-            <strong>
-              {data.length}
-            </strong>{' '}
-            resultados totales
-          </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 justify-between gap-4 p-4">
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1">
+            <span>
+              Mostrando{' '}
+              <strong>
+                {table.getRowModel().rows.length}
+              </strong>{' '}
+              de{' '}
+              <strong>
+                {table.getFilteredRowModel().rows.length}
+              </strong>{' '}
+              resultados (total {data.length})
+            </span>
+          </div>
         </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              table.previousPage()
-            }}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Anterior
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Siguiente
-          </Button>
+
+        <div className="flex justify-center space-x-2">
+          <PaginationControls table={table} />
+        </div>
+
+        {/* Panel derecho: paginación y salto */}
+        <div className="flex justify-end space-x-2">
+          <div className="flex items-center gap-1">
+            <span>Filas por página:</span>
+            <Select
+              value={table.getState().pagination.pageSize.toString()}
+              onValueChange={value => table.setPageSize(Number(value))}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Selecciona..." />
+              </SelectTrigger>
+              <SelectContent>
+                {[10, 20, 30, 50, 100].map(size => (
+                  <SelectItem key={size} value={size.toString()}>
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
+
     </div>
   )
 }
@@ -298,6 +305,104 @@ function DebouncedInput({
 
   return (
     <Input {...props} value={value} onChange={e => setValue(e.target.value)} />
+  )
+}
+
+function PaginationControls({ table }: { table: any }) {
+  const pageCount = table.getPageCount()
+  const currentPage = table.getState().pagination.pageIndex
+
+  // Ajusta cuántos “hermanos” mostrar alrededor de la página actual
+  const siblingCount = 1
+
+  const paginationRange = useMemo<(number | '...')[]>(() => {
+    const totalNumbers = siblingCount * 2 + 5;
+    // Si pocas páginas, muéstralas todas
+    if (pageCount <= totalNumbers) {
+      return Array.from({ length: pageCount }, (_, i) => i + 1);
+    }
+
+    const leftSiblingIndex = Math.max(currentPage + 1 - siblingCount, 1);
+    const rightSiblingIndex = Math.min(currentPage + 1 + siblingCount, pageCount);
+
+    const range: (number | '...')[] = [];
+    range.push(1); // siempre incluye la primera
+
+    // ellipsis si hay salto antes del bloque central
+    if (leftSiblingIndex > 2) {
+      range.push('...');
+    }
+
+    // páginas centrales: arrancan en al menos la 2 y van hasta la penúltima como máximo
+    const start = Math.max(leftSiblingIndex, 2);
+    const end = Math.min(rightSiblingIndex, pageCount - 1);
+    for (let i = start; i <= end; i++) {
+      range.push(i);
+    }
+
+    // ellipsis si faltan páginas antes de la última
+    if (rightSiblingIndex < pageCount - 1) {
+      range.push('...');
+    }
+
+    range.push(pageCount); // siempre incluye la última
+    return range;
+  }, [pageCount, currentPage, siblingCount]);
+
+
+  return (
+    <div className="flex items-center space-x-1">
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => table.setPageIndex(0)}
+        disabled={!table.getCanPreviousPage()}
+      >
+        « Primera
+      </Button>
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        ‹
+      </Button>
+
+      {paginationRange.map((item, idx) =>
+        item === '...' ? (
+          <span key={idx} className="px-2">…</span>
+        ) : (
+          <Button
+            key={idx}
+            size="sm"
+            variant={item - 1 === currentPage ? 'default' : 'outline'}
+            onClick={() => table.setPageIndex(item - 1)}
+          >
+            {item}
+          </Button>
+        )
+      )}
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => table.nextPage()}
+        disabled={!table.getCanNextPage()}
+      >
+        ›
+      </Button>
+
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => table.setPageIndex(pageCount - 1)}
+        disabled={!table.getCanNextPage()}
+      >
+        Última »
+      </Button>
+    </div>
   )
 }
 

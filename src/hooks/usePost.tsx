@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useAuthStore } from "./useAuthStore"
+import { useSession } from "./useSession"
 
 import fetchApi from "@/api/fetchApi"
 
@@ -15,7 +15,7 @@ export interface usePostInterface {
 
 
 export const usePost = () => {
-  const { token } = useAuthStore()
+  const { user } = useSession()
   const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<any>(null)
@@ -38,7 +38,7 @@ export const usePost = () => {
         body,
         headers: {},
         hasFiles,
-        token,
+        token: user?.token,
         qs,
       })
       data = await res.json()

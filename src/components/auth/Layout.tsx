@@ -21,6 +21,7 @@ export const Layout = ({ children }: LayerProps) => {
             <Separator orientation="vertical" className="mr-2 h-4" />
           </div>
         </header>
+        <Separator />
         <main className="p-5">
           {children}
         </main>

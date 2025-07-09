@@ -25,13 +25,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
-import { useAuthStore } from "@/hooks"
+import { useSession } from "@/hooks"
 import { Link } from "react-router-dom"
-import { API_URL } from "@/api/config"
-
+import hcg from "@/assets/images/hcg.png"
 export function NavUser() {
   const { isMobile } = useSidebar()
-  const { id, username, correo, name, startLogout, } = useAuthStore()
+  const { user, clearUser } = useSession()
 
   return (
     <SidebarMenu>
@@ -43,12 +42,12 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={`${API_URL}/user/get-profile-image/${id}`} alt={username || ''} />
-                <AvatarFallback className="rounded-lg">{name ? `${name}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
+                <AvatarImage src={hcg} alt='Hospital Civil de Guadalajara' />
+                <AvatarFallback className="rounded-lg">{user?.username ? `${user?.username}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{username}</span>
-                <span className="truncate text-xs">{correo}</span>
+                <span className="truncate font-semibold">{user?.username}</span>
+                <span className="truncate text-xs">{user?.username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -62,19 +61,19 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={`${API_URL}/user/get-profile-image/${id}`} alt={username || ''} />
-                  <AvatarFallback className="rounded-lg">{name ? `${name}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
+                  <AvatarImage src={hcg} alt='Hospital Civil de Guadalajara' />
+                  <AvatarFallback className="rounded-lg">{user?.username ? `${user?.username}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{username}</span>
-                  <span className="truncate text-xs">{correo}</span>
+                  <span className="truncate font-semibold">{user?.username}</span>
+                  <span className="truncate text-xs">{user?.username}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <Link to="/profile">
+              <Link to="/perfil">
                 <DropdownMenuItem>
                   <BadgeCheck />
                   Cuenta
@@ -82,7 +81,7 @@ export function NavUser() {
               </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={startLogout}>
+            <DropdownMenuItem onClick={clearUser}>
               <LogOut />
               Cerrar sesión
             </DropdownMenuItem>

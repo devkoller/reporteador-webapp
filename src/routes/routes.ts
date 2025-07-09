@@ -1,436 +1,238 @@
-// Views
-import { Login } from "@/views/Login"
-import { RecoveryPassword } from "@/views/RecoveryPassword"
-import { Home } from "@/views/Home"
+import { transparency } from "@/app/transparency/transparency"
+import { directorMessages } from "@/app/Landing/directors/directorMessages"
+import { chronology } from "@/app/Landing/chronology/chronology"
+import { faq } from "@/app/patients/faq/faq"
+import { rights } from "@/app/patients/rights/rights"
+import { news } from "@/app/news/news"
+import { newsId } from "@/app/news/[id]/newsId"
+import { campusId } from "@/app/campus/[id]/campusId"
+import { donateBlood } from "@/app/donate/donateBlood"
+import { Login } from "@/app/Login/Login"
 
-import { Enterprise } from "@/views/enterprise/Enterprise"
-import { NewEnterprisePage } from "@/views/enterprise/NewEnterprisePage"
-import { EnterpriseDetails } from "@/views/enterprise/EnterpriseDetails"
-
-import { Inventory } from "@/views/inventory/Inventory"
-import { AddProduct } from "@/views/inventory/AddProduct"
-
-import { Almacenes } from "@/views/warehouse/Almacenes"
-import { WarehouseId } from "@/views/warehouse/WarehouseId"
-import { WarehouseEdit } from "@/views/warehouse/WarehouseEdit"
-import { InventoryManage } from "@/views/warehouse/InventoryManage"
-import { ProductsDetails } from "@/views/warehouse/ProductsDetails"
-
-import { Proveedores } from "@/views/provider/Proveedores"
-import { NewProviderPage } from "@/views/provider/NewProviderPage"
-import { ProviderDetails } from "@/views/provider/ProviderDetails"
-import { ManagesProducts } from "@/views/provider/ManageProducts"
-
-import { OrdersOverview } from "@/views/orders/OrdersOverview"
-import { CreatePurchaseOrder } from "@/views/orders/CreatePurchaseOrder"
-import { CreateSellingOrder } from "@/views/orders/CreateSellingOrder"
-import { PurchaseDetail } from "@/views/orders/PurchaseDetail"
-import { SellingDetail } from "@/views/orders/SellingDetail"
-
-import { Services } from "@/views/service/Services"
-import { NewService } from "@/views/service/NewService"
-
-import { Contracts } from "@/views/contracts/Contracts"
-import { ContractNew } from "@/views/contracts/ContractNew"
-import { ContractDetails } from "@/views/contracts/ContractDetails"
-
-import { Users } from "@/views/Users"
-import { Clientes } from "@/views/client/Clientes"
-import { UserProfile } from "@/views/UserProfile"
+import { dashboard } from "@/app/dashboard/dashboard/dashboard"
+import { statistics } from "@/app/dashboard/analytics/statistics/statistics"
+import { appointments } from "@/app/dashboard/analytics/statistics/boards/appointments"
+import { emergency } from "@/app/dashboard/analytics/statistics/boards/emergency"
+import { surgeries } from "@/app/dashboard/analytics/statistics/boards/surgeries"
+import { income } from "@/app/dashboard/analytics/statistics/boards/income"
+import { productivity } from "@/app/dashboard/analytics/statistics/boards/productivity"
+import { reports } from "@/app/dashboard/analytics/reports/reports"
+import { Penalties } from "@/app/dashboard/analytics/statistics/boards/penalties"
 
 import {
-	Building2,
 	LayoutDashboard,
-	Package,
-	Warehouse,
-	Truck,
-	Users as UsersIcon,
-	UserCircle,
-	ShoppingCart,
-	Wrench,
-	FileText,
-	// ClipboardList,
+	// Users,
+	// CalendarDays,
+	// FileText,
+	BarChart3,
+	// Settings,
+	// BellRing,
+	// MessageSquare,
+	// PlusCircle,
+	// Search,
+	// FileClock,
+	// Activity,
+	BookOpen,
+	// FlaskConical,
 	// LogOut,
-	// ChevronDown,
-	// ArrowUpCircle,
-	// ArrowDownCircle,
-	// BarChart3,
-	// CheckCircle,
-	// Clock,
+	// HelpCircle,
 } from "lucide-react"
 
-const enterpriseRoutes = [
+export const mainNavItems = [
 	{
-		route: "/enterprise",
-		component: Enterprise,
-		title: "Empresas",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
+		title: "Inicio",
+		to: "/",
+		component: null,
 		menu: true,
-		icon: Building2,
+		submenu: [
+			{
+				title: "Mensaje del Director",
+				to: "/mensaje-del-director",
+				description: "Un de nuestro director general",
+				component: directorMessages,
+				menu: true,
+			},
+			{
+				title: "Cronología",
+				to: "/cronologia",
+				description: "Historia de nuestra institución",
+				component: chronology,
+				menu: true,
+			},
+		],
 	},
 	{
-		route: "/enterprise/new",
-		component: NewEnterprisePage,
-		title: "Empresas",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
+		title: "Pacientes",
+		to: "/pacientes",
+		component: null,
+		menu: true,
+		submenu: [
+			{
+				title: "Preguntas Frecuentes",
+				to: "/pacientes/faq",
+				description: "Preguntas frecuentes sobre nuestros servicios",
+				component: faq,
+				menu: true,
+			},
+			{
+				title: "Derechos y Deberes",
+				to: "/pacientes/derechos-y-deberes",
+				description: "Derechos y deberes de los pacientes",
+				component: rights,
+				menu: true,
+			},
+		],
 	},
 	{
-		route: "/enterprise/:id",
-		component: EnterpriseDetails,
-		title: "Empresas",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
+		title: "Transparencia",
+		to: "/transparencia",
+		component: transparency,
+		submenu: [],
+		menu: true,
 	},
 	{
-		route: "/enterprise/:id/edit",
-		component: NewEnterprisePage,
-		title: "Empresas",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
+		title: "Noticias",
+		to: "/noticias",
+		component: news,
+		menu: true,
+		submenu: [
+			{
+				title: "",
+				to: "/noticias/:id",
+				description: "",
+				component: newsId,
+				menu: false,
+			},
+		],
+	},
+	{
+		title: "Hospitales",
+		to: "#campuses",
+		component: null,
+		menu: true,
+		submenu: [
+			{
+				title: "Fray Antonio Alcalde",
+				to: "/hospitales/faa",
+				description: "Primer hospital Civil",
+				component: campusId,
+				menu: true,
+			},
+			{
+				title: "Dr. Juan I. Menchaca",
+				to: "/hospitales/jim",
+				description: "Segundo hospital Civil",
+				component: campusId,
+				menu: true,
+			},
+			{
+				title: "Hospital Civil de Oriente",
+				to: "/hospitales/hco",
+				description: "Tercer hospital Civil",
+				component: campusId,
+				menu: true,
+			},
+		],
+	},
+	{
+		title: "Dona sangre",
+		to: "/donar-sangre",
+		component: donateBlood,
+		submenu: [],
 		menu: false,
-		icon: Building2,
 	},
 ]
 
-const warehouseRoues = [
+export const limboNavItems = [
 	{
-		route: "/warehouse",
-		component: Almacenes,
-		title: "Almacenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: true,
-		icon: Warehouse,
-	},
-	{
-		route: "/warehouse/:id",
-		component: WarehouseId,
-		title: "Almacenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-	{
-		route: "/warehouse/:id/edit",
-		component: WarehouseEdit,
-		title: "Almacenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-	{
-		route: "/warehouse/:id/inventory/manage",
-		component: InventoryManage,
-		title: "Almacenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-	{
-		route: "/warehouse/:id/product/:productId",
-		component: ProductsDetails,
-		title: "Almacenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-]
-
-const inventoryRoutes = [
-	{
-		route: "/inventory",
-		component: Inventory,
-		title: "Inventario",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: true,
-		icon: Package,
-	},
-	{
-		route: "/inventory/add",
-		component: AddProduct,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
-	},
-	{
-		route: "/inventory/edit/:id",
-		component: AddProduct,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
-	},
-]
-
-const providerRoutes = [
-	{
-		route: "/provider",
-		component: Proveedores,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Proveedores",
-		needGrants: true,
-		menu: true,
-		icon: Truck,
-	},
-	{
-		route: "/provider/:id/edit",
-		component: NewProviderPage,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
-	},
-	{
-		route: "/provider/new",
-		component: NewProviderPage,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
-	},
-	{
-		route: "/provider/:id",
-		component: ProviderDetails,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
-	},
-	{
-		route: "/provider/:id/products",
-		component: ManagesProducts,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Building2,
-	},
-]
-
-const serviceRoutes = [
-	{
-		route: "/product/services",
-		component: Services,
-		title: "Servicios",
-		state: "Authenticated",
-		breadcrumb: "Proveedores",
-		needGrants: true,
-		menu: true,
-		icon: Wrench,
-	},
-	{
-		route: "/product/service/new",
-		component: NewService,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: Wrench,
-	},
-]
-
-const clientRoutes = [
-	{
-		route: "/client",
-		component: Clientes,
-		title: "Clientes",
-		state: "Authenticated",
-		breadcrumb: "Clientes",
-		needGrants: true,
-		menu: true,
-		icon: UsersIcon,
-	},
-]
-
-const ordersRoutes = [
-	{
-		route: "/order",
-		component: OrdersOverview,
-		title: "Ordenes",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: true,
-		icon: ShoppingCart,
-	},
-	{
-		route: "/order/selling/new",
-		component: CreateSellingOrder,
-		title: "Ordenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-	{
-		route: "/order/selling/:id",
-		component: SellingDetail,
-		title: "Ordenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-	{
-		route: "/order/purchase/new",
-		component: CreatePurchaseOrder,
-		title: "Ordenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-	{
-		route: "/order/purchase/:id",
-		component: PurchaseDetail,
-		title: "Ordenes",
-		state: "Authenticated",
-		breadcrumb: "Almacenes",
-		needGrants: true,
-		menu: false,
-		icon: Warehouse,
-	},
-]
-
-const contractRoutes = [
-	{
-		route: "/contract",
-		component: Contracts,
-		title: "Contratos",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: true,
-		icon: FileText,
-	},
-	{
-		route: "/contract/new",
-		component: ContractNew,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: FileText,
-	},
-	{
-		route: "/contract/edit/:id",
-		component: ContractNew,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: FileText,
-	},
-	{
-		route: "/contract/:id",
-		component: ContractDetails,
-		title: "Proveedores",
-		state: "Authenticated",
-		breadcrumb: "Inventario",
-		needGrants: true,
-		menu: false,
-		icon: FileText,
-	},
-]
-
-export const routes = [
-	{
-		route: "/login",
+		title: "login",
+		to: "/iniciar-sesion",
 		component: Login,
-		state: "Not Authenticated",
+		submenu: [],
 		menu: false,
-		icon: UserCircle,
 	},
+]
+
+export const AuthNavItems = [
 	{
-		route: "/recovery-password",
-		component: RecoveryPassword,
-		state: "Not Authenticated",
-		menu: false,
-		icon: UserCircle,
-	},
-	{
-		route: "/home",
-		component: Home,
 		title: "Dashboard",
-		state: "Authenticated",
-		breadcrumb: "Inicio",
-		needGrants: false,
+		to: "/inicio",
+		component: dashboard,
 		menu: true,
 		icon: LayoutDashboard,
+		submenu: [],
 	},
-	//enterprise
-	...enterpriseRoutes,
-	//inventory
-	...inventoryRoutes,
-	//services
-	...serviceRoutes,
-	//warehouse
-	...warehouseRoues,
-	//provider
-	...providerRoutes,
-	//clients
-	...clientRoutes,
-	//orders
-	...ordersRoutes,
-	//contracts
-	...contractRoutes,
 	{
-		route: "/usuarios",
-		component: Users,
-		title: "Usuarios",
-		state: "Authenticated",
-		breadcrumb: "Usuarios",
-		needGrants: true,
+		title: "Analítica",
+		to: "/analitica",
+		component: dashboard,
+		icon: BarChart3,
 		menu: true,
-		icon: UserCircle,
-	},
-	{
-		route: "/profile",
-		component: UserProfile,
-		title: "Usuarios",
-		state: "Authenticated",
-		breadcrumb: "Usuarios",
-		needGrants: false,
-		menu: false,
+		submenu: [
+			{
+				title: "Estadísticas",
+				to: "/estadisticas",
+				description: "Estadísticas",
+				component: statistics,
+				menu: true,
+				icon: BarChart3,
+			},
+			{
+				title: "Estadísticas",
+				to: "/estadisticas/citados",
+				description: "Estadísticas",
+				component: appointments,
+				menu: false,
+				icon: null,
+			},
+			{
+				title: "Estadísticas",
+				to: "/estadisticas/ingresos",
+				description: "Estadísticas",
+				component: income,
+				menu: false,
+				icon: null,
+			},
+			{
+				title: "Estadísticas",
+				to: "/estadisticas/urgencias",
+				description: "Estadísticas",
+				component: emergency,
+				menu: false,
+				icon: null,
+			},
+			{
+				title: "Estadísticas",
+				to: "/estadisticas/cirugias",
+				description: "Estadísticas",
+				component: surgeries,
+				menu: false,
+				icon: null,
+			},
+			{
+				title: "Estadísticas",
+				to: "/estadisticas/productividad",
+				description: "Estadísticas",
+				component: productivity,
+				menu: false,
+				icon: null,
+			},
+			{
+				title: "Estadísticas",
+				to: "/estadisticas/penalties",
+				description: "Estadísticas",
+				component: Penalties,
+				menu: false,
+				icon: null,
+			},
+			{
+				title: "Reportes",
+				to: "/reportes",
+				description: "reportes",
+				component: reports,
+				menu: true,
+				icon: BookOpen,
+			},
+		],
 	},
 ]
