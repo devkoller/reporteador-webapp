@@ -18,6 +18,7 @@ import { income } from "@/app/dashboard/analytics/statistics/boards/income"
 import { productivity } from "@/app/dashboard/analytics/statistics/boards/productivity"
 import { reports } from "@/app/dashboard/analytics/reports/reports"
 import { Penalties } from "@/app/dashboard/analytics/statistics/boards/penalties"
+import { Incumplimientos } from "@/app/dashboard/analytics/statistics/boards/incumplimientos"
 
 import {
 	LayoutDashboard,
@@ -220,6 +221,14 @@ export const AuthNavItems = [
 			{
 				title: "Estadísticas",
 				to: "/estadisticas/penalties",
+				description: "Estadísticas",
+				component: Penalties,
+				menu: false,
+				icon: null,
+			},
+			{
+				title: "Estadísticas",
+				to: "/estadisticas/incumplimientos",
 				description: "Estadísticas",
 				component: Penalties,
 				menu: false,

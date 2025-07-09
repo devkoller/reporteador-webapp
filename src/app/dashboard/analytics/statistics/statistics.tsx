@@ -69,13 +69,13 @@ export const statistics = () => {
       path: "/estadisticas/penalties",
       color: "bg-teal-100 dark:bg-teal-900/20",
     },
-    // {
-    //   icon: <DollarSign className="h-10 w-10" />,
-    //   title: "Finanzas y Costos",
-    //   description: "Track revenue, costs, and financial performance indicators",
-    //   path: "/estadisticas/citados",
-    //   color: "bg-cyan-100 dark:bg-cyan-900/20",
-    // },
+    {
+      icon: <DollarSign className="h-10 w-10" />,
+      title: "Incumplimientos",
+      description: "Monitor de incumplimientos y acciones correctivas",
+      path: "/estadisticas/incumplimientos",
+      color: "bg-cyan-100 dark:bg-cyan-900/20",
+    },
     // {
     //   icon: <BarChart3 className="h-10 w-10" />,
     //   title: "Reportes Personalizados",
