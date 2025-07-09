@@ -230,7 +230,7 @@ export const AuthNavItems = [
 				title: "Estadísticas",
 				to: "/estadisticas/incumplimientos",
 				description: "Estadísticas",
-				component: Penalties,
+				component: Incumplimientos,
 				menu: false,
 				icon: null,
 			},
