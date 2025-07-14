@@ -11,6 +11,7 @@ import { useSession } from "@/hooks"
 export const Router = () => {
   const { user } = useSession()
 
+
   // const printPageRoutes = () => {
 
   //   const routes: any = [];
@@ -77,13 +78,16 @@ export const Router = () => {
         });
       }
 
-      // if (item.component && user.permissions.includes(item.permission || 0)) {
+      if (!user.permissions) {
+        return;
+      }
 
-      routes.push({
-        to: item.to,
-        component: item.component,
-      });
-      // }
+      if (item.component && user.permissions.includes(item.permission || 0)) {
+        routes.push({
+          to: item.to,
+          component: item.component,
+        });
+      }
 
       if (Array.isArray(item.submenu)) {
         item.submenu.forEach(sub => {
