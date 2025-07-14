@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ColumnFilterPopover } from "./ColumnFilterPopover"
+import ExcelJS from "exceljs";
 
 
 import {
@@ -113,6 +114,44 @@ function DataTableComponent<T>({
 
 
 
+  async function exportToExcelExcelJS(table: any, filename = "export.xlsx") {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Datos");
+
+    const visibleColumns = table
+      .getAllColumns()
+      .filter((col: any) => col.getIsVisible() && col.id !== "actions");
+
+    // Encabezados
+    worksheet.addRow(visibleColumns.map((col: any) => col.columnDef.header));
+
+    // Filas
+    const rows = table.getFilteredRowModel().rows;
+
+    rows.forEach((row: any) => {
+      const rowData = row.getVisibleCells().map((cell: any) =>
+        cell.getValue() ?? "(Sin datos)"
+      );
+      worksheet.addRow(rowData);
+    });
+
+    // Descargar
+    const buffer = await workbook.xlsx.writeBuffer();
+
+    const blob = new Blob([buffer], {
+      type:
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+  }
+
+
+
+
   React.useEffect(() => {
     table.toggleAllRowsSelected(false)
   }, [data])
@@ -120,121 +159,128 @@ function DataTableComponent<T>({
 
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}
-
-                  >
-                    <div className="max-w-[200px] flex items-center space-x-2">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-
-                      <ColumnFilterPopover
-                        columnId={header.column.id}
-                        column={header.column}
-                        values={uniqueColumnValues[header.column.id] || []}
-                      />
-                    </div>
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
-              return (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => {
-                  }}
-                  onDoubleClick={() => {
-                    onRowDoubleClick(row.original)
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} onClick={() => {
-                      if (cell.column.id !== "actions") {
-                        // table.toggleAllRowsSelected(false)
-
-                        // row.toggleSelected()
-                        onRowClick(row.original)
-                      }
-                    }}>
-                      <div
-                        className="max-w-[200px] truncate cursor-default"
-                        title={String(cell.getValue())} // ← tooltip nativo del navegador
-                      >
-
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </div>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              )
-            })
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                Sin resultados.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 justify-between gap-4 p-4">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center gap-1">
-            <span>
-              Mostrando{' '}
-              <strong>
-                {table.getRowModel().rows.length}
-              </strong>{' '}
-              de{' '}
-              <strong>
-                {table.getFilteredRowModel().rows.length}
-              </strong>{' '}
-              resultados (total {data.length})
-            </span>
-          </div>
-        </div>
-
-        <div className="flex justify-center space-x-2">
-          <PaginationControls table={table} />
-        </div>
-
-        {/* Panel derecho: paginación y salto */}
-        <div className="flex xl:justify-end space-x-2">
-          <div className="flex items-center gap-1">
-            <span>Filas por página:</span>
-            <Select
-              value={table.getState().pagination.pageSize.toString()}
-              onValueChange={value => table.setPageSize(Number(value))}
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Selecciona..." />
-              </SelectTrigger>
-              <SelectContent>
-                {[10, 20, 30, 50, 100].map(size => (
-                  <SelectItem key={size} value={size.toString()}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+    <>
+      <div className="mb-3 flex justify-end">
+        <Button onClick={() => exportToExcelExcelJS(table, "export-seguro.xlsx")}>
+          Exportar a Excel
+        </Button>
       </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}
 
-    </div>
+                    >
+                      <div className="max-w-[200px] flex items-center space-x-2">
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+
+                        <ColumnFilterPopover
+                          columnId={header.column.id}
+                          column={header.column}
+                          values={uniqueColumnValues[header.column.id] || []}
+                        />
+                      </div>
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => {
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    onClick={() => {
+                    }}
+                    onDoubleClick={() => {
+                      onRowDoubleClick(row.original)
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} onClick={() => {
+                        if (cell.column.id !== "actions") {
+                          // table.toggleAllRowsSelected(false)
+
+                          // row.toggleSelected()
+                          onRowClick(row.original)
+                        }
+                      }}>
+                        <div
+                          className="max-w-[200px] truncate cursor-default"
+                          title={String(cell.getValue())} // ← tooltip nativo del navegador
+                        >
+
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </div>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                )
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  Sin resultados.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 justify-between gap-4 p-4">
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-1">
+              <span>
+                Mostrando{' '}
+                <strong>
+                  {table.getRowModel().rows.length}
+                </strong>{' '}
+                de{' '}
+                <strong>
+                  {table.getFilteredRowModel().rows.length}
+                </strong>{' '}
+                resultados (total {data.length})
+              </span>
+            </div>
+          </div>
+
+          <div className="flex justify-center space-x-2">
+            <PaginationControls table={table} />
+          </div>
+
+          {/* Panel derecho: paginación y salto */}
+          <div className="flex xl:justify-end space-x-2">
+            <div className="flex items-center gap-1">
+              <span>Filas por página:</span>
+              <Select
+                value={table.getState().pagination.pageSize.toString()}
+                onValueChange={value => table.setPageSize(Number(value))}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Selecciona..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {[10, 20, 30, 50, 100].map(size => (
+                    <SelectItem key={size} value={size.toString()}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </>
   )
 }
 
