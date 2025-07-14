@@ -89,17 +89,17 @@ export const Router = () => {
         });
       }
 
-      if (Array.isArray(item.submenu)) {
-        item.submenu.forEach(sub => {
+      // if (Array.isArray(item.submenu)) {
+      //   item.submenu.forEach(sub => {
 
-          if (sub?.component && user.permissions.includes(sub.permission || 0)) {
-            routes.push({
-              to: `${item.to}${sub.to}`,
-              component: sub?.component,
-            });
-          }
-        });
-      }
+      //     if (sub?.component && user.permissions.includes(sub.permission || 0)) {
+      //       routes.push({
+      //         to: `${item.to}${sub.to}`,
+      //         component: sub?.component,
+      //       });
+      //     }
+      //   });
+      // }
 
     })
 
