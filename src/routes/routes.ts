@@ -262,6 +262,7 @@ export const AuthNavItems = [
 		component: UsersView,
 		icon: Users,
 		menu: true,
+		permission: 11,
 		submenu: [],
 	},
 ]

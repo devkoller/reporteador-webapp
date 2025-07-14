@@ -76,8 +76,7 @@ export function NavMain() {
         )
       }
 
-      // if (!user.permissions.includes(item.permission || 0) && item.to !== '/') return
-
+      if (!user.permissions.includes(item.permission || 0) && item.to !== '/') return
 
       return (
         <SidebarMenuItem key={index}>

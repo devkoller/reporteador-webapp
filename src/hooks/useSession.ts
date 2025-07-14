@@ -55,9 +55,9 @@ export const useSession = () => {
 
 				const newToken = json.data.token
 
-				if (json.status !== 200) {
-					console.log("🚀 > useSession.ts:73 > fetchData > json:", json)
-					// clearUser()
+				if (json.status == 401) {
+					clearUser()
+					return
 				}
 
 				const newUser = {
@@ -89,9 +89,9 @@ export const useSession = () => {
 
 				const permissions = json.data
 
-				if (json.status !== 200) {
-					console.log("🚀 > useSession.ts:73 > fetchData > json:", json)
-					// clearUser()
+				if (json.status === 401) {
+					clearUser()
+					return
 				}
 
 				const newUser = {
@@ -103,7 +103,7 @@ export const useSession = () => {
 				setLocalStorage(newUser)
 			} catch (error) {
 				// console.log("🚀 > useSession.ts:85 > fetchData > error:", error)
-				clearUser()
+				// clearUser()
 			}
 		}
 

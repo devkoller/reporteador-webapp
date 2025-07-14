@@ -12,7 +12,7 @@ export interface useFetchInterface {
 
 
 export const useFetch = ({ url, qs, enabled = true }: useFetchInterface) => {
-  const { user } = useSession()
+  const { user, clearUser } = useSession()
 
   // Definimos la clave de consulta, incorporando 'url' y 'qs'
   const queryKey = ['fetchData', url, qs];
@@ -22,6 +22,10 @@ export const useFetch = ({ url, qs, enabled = true }: useFetchInterface) => {
     const res = await fetchApi.get({ url, qs, token: user?.token, signal });
     if (!res.ok) {
       throw new Error(`Error fetching data. Status: ${res.status}`);
+    }
+    if (res.status === 401) {
+      clearUser()
+      return
     }
     const json = await res.json();
     return json;

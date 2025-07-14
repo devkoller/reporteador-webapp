@@ -15,7 +15,7 @@ export interface usePostInterface {
 
 
 export const usePost = () => {
-  const { user } = useSession()
+  const { user, clearUser } = useSession()
   const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<any>(null)
@@ -46,6 +46,13 @@ export const usePost = () => {
 
       if (!res.ok) {
         throw res
+      }
+
+
+
+      if (data.status === 401) {
+        clearUser()
+        return
       }
 
       if (!signal.aborted) {
