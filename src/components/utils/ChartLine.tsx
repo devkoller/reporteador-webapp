@@ -202,7 +202,7 @@ export function GenericChart<T>({
                   ))}
                 </Pie>
                 <Tooltip />
-                <Legend formatter={(value, entry, index) => {
+                <Legend formatter={(value, entry,) => {
                   const val = entry?.payload?.value || 0
                   // console.log("🚀 > ChartLine.tsx:209 > val:", val);
                   let total = data.length
