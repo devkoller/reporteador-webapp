@@ -33,6 +33,8 @@ export function NavMain() {
     return AuthNavItems.map((item, index) => {
       let subItem = item.submenu.filter((sub) => sub.menu === true)
 
+      if (!user.permissions) return
+
       if (subItem.length > 0) {
 
         return (
