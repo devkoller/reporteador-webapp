@@ -103,7 +103,7 @@ export const useSession = () => {
 				setLocalStorage(newUser)
 			} catch (error) {
 				// console.log("🚀 > useSession.ts:85 > fetchData > error:", error)
-				// clearUser()
+				clearUser()
 			}
 		}
 
