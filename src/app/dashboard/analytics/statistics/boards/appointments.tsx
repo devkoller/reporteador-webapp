@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useFetch, useDynamicFilters } from "@/hooks"
 import { Spinner } from "@/components/ui/spinner"
 import { DateRange } from "react-day-picker"
+import { useNavigate } from "react-router-dom"
 
 import { Link } from "react-router-dom"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -40,6 +41,7 @@ const fastFilterableKeys: (keyof AppointmentType)[] = [
 
 
 export const appointments = () => {
+  const navigate = useNavigate();
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 3),
@@ -50,7 +52,7 @@ export const appointments = () => {
   });
 
   const [rawData, setRawData] = useState<AppointmentType[]>([]);
-  const { response: appointmentData, loading, refetch } = useFetch({
+  const { response: appointmentData, loading, refetch, error } = useFetch({
     url: "/v1/data/vCitados",
     qs: {
       start: format(date?.from || '', "dd/MM/yyyy"),
@@ -85,7 +87,6 @@ export const appointments = () => {
 
   useEffect(() => {
     if (appointmentData) {
-
       let countNoAttended = 0;
       let diff = []
 
@@ -113,6 +114,12 @@ export const appointments = () => {
     }
   }, [appointmentData])
 
+  useEffect(() => {
+    if (error) {
+      navigate("/analitica")
+    }
+  }, [error])
+
 
   if (loading) {
     return (
@@ -129,7 +136,7 @@ export const appointments = () => {
       <div className="flex flex-1 flex-col space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link to="/estadisticas">
+            <Link to="/analitica">
               <Button variant="outline" size="icon">
                 <ChevronLeft className="h-4 w-4" />
               </Button>

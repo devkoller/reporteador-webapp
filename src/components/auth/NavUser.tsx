@@ -7,7 +7,7 @@ import {
 import {
   Avatar,
   AvatarFallback,
-  AvatarImage,
+  // AvatarImage,
 } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -27,7 +27,8 @@ import {
 
 import { useSession } from "@/hooks"
 import { Link } from "react-router-dom"
-import hcg from "@/assets/images/hcg.png"
+
+
 export function NavUser() {
   const { isMobile } = useSidebar()
   const { user, clearUser } = useSession()
@@ -42,11 +43,11 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={hcg} alt='Hospital Civil de Guadalajara' />
-                <AvatarFallback className="rounded-lg">{user?.username ? `${user?.username}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
+                {/* <AvatarImage src={hcg} alt='Hospital Civil de Guadalajara' /> */}
+                <AvatarFallback className="rounded-lg">{user?.fullName ? `${user?.fullName}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user?.username}</span>
+                <span className="truncate font-semibold">{user?.fullName}</span>
                 <span className="truncate text-xs">{user?.username}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -61,11 +62,11 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={hcg} alt='Hospital Civil de Guadalajara' />
-                  <AvatarFallback className="rounded-lg">{user?.username ? `${user?.username}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
+                  {/* <AvatarImage src={hcg} alt='Hospital Civil de Guadalajara' /> */}
+                  <AvatarFallback className="rounded-lg">{user?.fullName ? `${user?.fullName}`.toUpperCase().substring(0, 1) : ''}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user?.username}</span>
+                  <span className="truncate font-semibold">{user?.fullName}</span>
                   <span className="truncate text-xs">{user?.username}</span>
                 </div>
               </div>

@@ -204,7 +204,7 @@ function DataTableComponent<T>({
         </div>
 
         {/* Panel derecho: paginación y salto */}
-        <div className="flex justify-end space-x-2">
+        <div className="flex xl:justify-end space-x-2">
           <div className="flex items-center gap-1">
             <span>Filas por página:</span>
             <Select

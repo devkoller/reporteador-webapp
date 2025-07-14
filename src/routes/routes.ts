@@ -20,9 +20,11 @@ import { reports } from "@/app/dashboard/analytics/reports/reports"
 import { Penalties } from "@/app/dashboard/analytics/statistics/boards/penalties"
 import { Incumplimientos } from "@/app/dashboard/analytics/statistics/boards/incumplimientos"
 
+import { UsersView } from "@/app/users/UsersView"
+
 import {
 	LayoutDashboard,
-	// Users,
+	Users,
 	// CalendarDays,
 	// FileText,
 	BarChart3,
@@ -157,7 +159,7 @@ export const limboNavItems = [
 export const AuthNavItems = [
 	{
 		title: "Dashboard",
-		to: "/inicio",
+		to: "/",
 		component: dashboard,
 		menu: true,
 		icon: LayoutDashboard,
@@ -166,8 +168,9 @@ export const AuthNavItems = [
 	{
 		title: "Analítica",
 		to: "/analitica",
-		component: dashboard,
+		component: statistics,
 		icon: BarChart3,
+		permission: 1,
 		menu: true,
 		submenu: [
 			{
@@ -175,6 +178,7 @@ export const AuthNavItems = [
 				to: "/estadisticas",
 				description: "Estadísticas",
 				component: statistics,
+				permission: 2,
 				menu: true,
 				icon: BarChart3,
 			},
@@ -183,6 +187,7 @@ export const AuthNavItems = [
 				to: "/estadisticas/citados",
 				description: "Estadísticas",
 				component: appointments,
+				permission: 2,
 				menu: false,
 				icon: null,
 			},
@@ -191,6 +196,7 @@ export const AuthNavItems = [
 				to: "/estadisticas/ingresos",
 				description: "Estadísticas",
 				component: income,
+				permission: 5,
 				menu: false,
 				icon: null,
 			},
@@ -200,6 +206,7 @@ export const AuthNavItems = [
 				description: "Estadísticas",
 				component: emergency,
 				menu: false,
+				permission: 6,
 				icon: null,
 			},
 			{
@@ -207,6 +214,7 @@ export const AuthNavItems = [
 				to: "/estadisticas/cirugias",
 				description: "Estadísticas",
 				component: surgeries,
+				permission: 7,
 				menu: false,
 				icon: null,
 			},
@@ -216,6 +224,7 @@ export const AuthNavItems = [
 				description: "Estadísticas",
 				component: productivity,
 				menu: false,
+				permission: 8,
 				icon: null,
 			},
 			{
@@ -223,6 +232,7 @@ export const AuthNavItems = [
 				to: "/estadisticas/penalties",
 				description: "Estadísticas",
 				component: Penalties,
+				permission: 9,
 				menu: false,
 				icon: null,
 			},
@@ -232,6 +242,7 @@ export const AuthNavItems = [
 				description: "Estadísticas",
 				component: Incumplimientos,
 				menu: false,
+				permission: 10,
 				icon: null,
 			},
 			{
@@ -239,9 +250,18 @@ export const AuthNavItems = [
 				to: "/reportes",
 				description: "reportes",
 				component: reports,
+				permission: 3,
 				menu: true,
 				icon: BookOpen,
 			},
 		],
+	},
+	{
+		title: "Usuarios y permisos",
+		to: "/users",
+		component: UsersView,
+		icon: Users,
+		menu: true,
+		submenu: [],
 	},
 ]

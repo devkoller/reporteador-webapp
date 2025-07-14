@@ -40,6 +40,7 @@ export const usePost = () => {
         hasFiles,
         token: user?.token,
         qs,
+        signal,
       })
       data = await res.json()
 

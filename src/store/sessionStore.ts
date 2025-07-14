@@ -16,7 +16,7 @@ export const loadSession = (): SessionState => {
 			lastName2: "",
 			fullName: "",
 			email: "",
-			keepSessionOpen: false,
+			permissions: [],
 			status: "checking",
 		},
 	}

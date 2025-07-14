@@ -1,14 +1,14 @@
-import { PageLayout } from "@/components"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
-import { FormInput, FormCheckBox } from '@/components/Form'
+import { FormInput } from '@/components/Form'
 import { LoginForm } from "@/components/login-form"
-import { usePost, useSession } from "@/hooks"
+import { usePost, useSession, useToast } from "@/hooks"
 import { User } from "@/types"
+import { Spinner } from "@/components/ui/spinner"
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -21,18 +21,17 @@ const formSchema = z.object({
   }).max(50, {
     message: "La contraseña debe tener menos de 50 caracteres",
   }),
-  keepSessionOpen: z.boolean(),
 })
 
 export const Login = () => {
   const { setUser } = useSession()
-  const { execute } = usePost()
+  const { execute, loading } = usePost()
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       password: "",
-      keepSessionOpen: false,
     },
   })
 
@@ -43,55 +42,59 @@ export const Login = () => {
       method: "post",
       body: values,
     }).then((res) => {
-
       if (res.status === 200) {
         let data = res.data
+
         let user = {
           ...data.user,
+          permissions: data.permissions,
           token: data.token,
-          keepSessionOpen: values.keepSessionOpen,
           status: "authenticated",
         }
 
         setUser(user as User)
+
+        toast({
+          title: "Inicio de sesión exitoso",
+          description: "Bienvenido a Panacea",
+        })
       } else {
+        toast({
+          title: "Error al iniciar sesión",
+          description: res.message || "Por favor, verifica tus credenciales",
+          variant: "destructive",
+        })
       }
-
-
     })
   }
 
   return (
-    <PageLayout>
-      <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
-        <div className="w-full max-w-sm md:max-w-3xl">
-          <LoginForm>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormInput
-                  label="Usuario"
-                  name="username"
-                  control={form.control}
-                />
-                <FormInput
-                  label="Contraseña"
-                  name="password"
-                  type="password"
-                  control={form.control}
-                />
-                <FormCheckBox
-                  label="Mantener sesión abierta"
-                  name="keepSessionOpen"
-                  control={form.control}
-                />
-                <Button type="submit">
-                  Iniciar sesión
-                </Button>
-              </form>
-            </Form>
-          </LoginForm>
-        </div>
+    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-3xl">
+        <LoginForm>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormInput
+                label="Usuario"
+                name="username"
+                control={form.control}
+              />
+              <FormInput
+                label="Contraseña"
+                name="password"
+                type="password"
+                control={form.control}
+              />
+              <Button type="submit" disabled={loading} className="w-full">
+                Iniciar sesión
+                {loading && (
+                  <Spinner />
+                )}
+              </Button>
+            </form>
+          </Form>
+        </LoginForm>
       </div>
-    </PageLayout>
+    </div>
   )
 }

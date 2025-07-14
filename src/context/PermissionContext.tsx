@@ -1,5 +1,5 @@
 // import React, { createContext, useState, useEffect, ReactNode } from 'react';
-// import { useAuthStore } from '@/hooks';
+// import { useSession } from '@/hooks';
 // import { updatePermissions } from "@/service/authService.ts"
 
 // interface IPermissions {
@@ -31,12 +31,13 @@
 // export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children }) => {
 //   const [permissions, setPermissions] = useState<IPermission[]>([]);
 //   const [loading, setLoading] = useState<boolean>(true);
-//   const { token } = useAuthStore();
+//   const { user } = useSession();
 
 
 //   useEffect(() => {
 //     // se ejecuta cuando el token cambia
-//     if (token) {
+//     if (!user?.token) return
+//     if (user.token) {
 //       const fetchPermissions = async () => {
 //         setLoading(true);
 //         try {
