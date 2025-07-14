@@ -5,20 +5,20 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
+  // SidebarMenuSub,
+  // SidebarMenuSubItem,
+  // SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
 // import { PermissionContext } from '@/context/PermissionContext';
 import { AuthNavItems } from "@/routes/routes"
-import { ChevronRight } from "lucide-react"
+// import { ChevronRight } from "lucide-react"
 
 
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+// import {
+//   Collapsible,
+//   CollapsibleContent,
+//   CollapsibleTrigger,
+// } from "@/components/ui/collapsible"
 import { useSession } from "@/hooks"
 
 
@@ -31,50 +31,50 @@ export function NavMain() {
 
   const print = () => {
     return AuthNavItems.map((item, index) => {
-      let subItem = item.submenu.filter((sub) => sub.menu === true)
+      // let subItem = item.submenu.filter((sub) => sub.menu === true)
 
       if (!user.permissions) return
 
-      if (subItem.length > 0) {
+      // if (subItem.length > 0) {
+      //   if (!user.permissions.includes(item.permission || 0)) return
+      //   return (
+      //     <Collapsible
+      //       key={item.title}
+      //       asChild
+      //       defaultOpen
+      //       className="group/collapsible"
+      //     >
+      //       <SidebarMenuItem>
+      //         <CollapsibleTrigger asChild>
+      //           <SidebarMenuButton tooltip={item.title} asChild>
+      //             <NavLink to={`${item.to}`} className="[&.active]:bg-sky-400/20 w-full flex rounded-md" >
+      //               {item.icon && <item.icon />}
+      //               <span>{item.title}</span>
+      //               <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+      //             </NavLink>
+      //           </SidebarMenuButton>
+      //         </CollapsibleTrigger>
+      //         <CollapsibleContent>
+      //           <SidebarMenuSub>
+      //             {subItem.map((subItem) => {
+      //               if (!user.permissions.includes(subItem.permission || 0)) return
 
-        return (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen
-            className="group/collapsible"
-          >
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title} asChild>
-                  <NavLink to={`${item.to}`} className="[&.active]:bg-sky-400/20 w-full flex rounded-md" >
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                  </NavLink>
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {subItem.map((subItem) => {
-                    if (!user.permissions.includes(subItem.permission || 0)) return
-
-                    return (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild>
-                          <NavLink to={`${item.to}${subItem.to}`} className="[&.active]:bg-sky-400/20 w-full flex rounded-md">
-                            <span>{subItem.title}</span>
-                          </NavLink>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    )
-                  })}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
-        )
-      }
+      //               return (
+      //                 <SidebarMenuSubItem key={subItem.title}>
+      //                   <SidebarMenuSubButton asChild>
+      //                     <NavLink to={`${item.to}${subItem.to}`} className="[&.active]:bg-sky-400/20 w-full flex rounded-md">
+      //                       <span>{subItem.title}</span>
+      //                     </NavLink>
+      //                   </SidebarMenuSubButton>
+      //                 </SidebarMenuSubItem>
+      //               )
+      //             })}
+      //           </SidebarMenuSub>
+      //         </CollapsibleContent>
+      //       </SidebarMenuItem>
+      //     </Collapsible>
+      //   )
+      // }
 
       if (!user.permissions.includes(item.permission || 0) && item.to !== '/') return
 

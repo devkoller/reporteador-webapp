@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
-import login from '@/assets/images/sigma.png'
+import login from '@/assets/images/fondo.png'
 import logo from '@/assets/images/logo.png'
 
 
@@ -23,7 +23,7 @@ export function LoginForm({
                   className="h-[2cm]"
                 />
                 <div className="flex flex-col justify-center">
-                  <h1 className="text-2xl font-bold">Bienvenido a Sigma</h1>
+                  <h1 className="text-2xl font-bold">Bienvenido a Sigma Finanzas</h1>
                   <p className="text-balance text-muted-foreground">
                     Hospital Civil de Guadalajara
                   </p>
