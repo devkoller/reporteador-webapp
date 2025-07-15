@@ -2,7 +2,6 @@ import { Layout } from "@/components/auth"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DataTable } from "@/components/utils"
 import { useEffect, useState } from "react"
-import { useFetch } from "@/hooks"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ContractType } from "@/types"
 import { Spinner } from "@/components/ui/spinner"
@@ -13,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Form } from "@/components/ui/form"
 import { FormCombobox } from '@/components/Form'
-import { usePost, useToast } from "@/hooks"
+import { usePost, useToast, useFetch } from "@/hooks"
 import { Button } from "@/components/ui/button"
 
 const formSchema = z.object({
@@ -48,12 +47,21 @@ export const Contracts = () => {
   })
 
 
-  const { response: licitacionesData, } = useFetch({
+  const { response: licitacionesData, refetch: refetchLicitaciones } = useFetch({
     url: "/v1/data/licitaciones",
+    qs: {
+      ejercicio: form.watch("ejercicio"),
+    }
   })
-  const { response: articulosData, } = useFetch({
+
+  const { response: articulosData, refetch: refetchArticulos } = useFetch({
     url: "/v1/data/articulos",
+    qs: {
+      ejercicio: form.watch("ejercicio"),
+      num_licitacion: form.watch("num_licitacion"),
+    }
   })
+
   const { response: ejerciciosData, } = useFetch({
     url: "/v1/data/ejercicios",
   })
@@ -108,6 +116,21 @@ export const Contracts = () => {
     }
   }, [ejerciciosData])
 
+  useEffect(() => {
+    if (form.watch("ejercicio")) {
+      refetchLicitaciones()
+      refetchArticulos()
+      form.setValue("cod_bar_mc_pr", "")
+      form.setValue("num_licitacion", "")
+    }
+  }, [form.watch("ejercicio")])
+
+  useEffect(() => {
+    if (form.watch("num_licitacion") || form.watch("ejercicio")) {
+      refetchArticulos()
+    }
+  }, [form.watch("num_licitacion"), form.watch("ejercicio")])
+
 
   return (
     <Layout>
@@ -153,7 +176,7 @@ export const Contracts = () => {
                         control={form.control}
                         setValue={form.setValue}
                         option={ComboOptions.codigos}
-                        needFilter
+                        needFilter={ComboOptions.codigos.length > 20}
                       />
 
                     </div>

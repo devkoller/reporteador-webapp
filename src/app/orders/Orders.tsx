@@ -7,18 +7,127 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ContractType } from "@/types"
 import { Spinner } from "@/components/ui/spinner"
 
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { Form } from "@/components/ui/form"
+import { FormCombobox } from '@/components/Form'
+import { usePost, useToast } from "@/hooks"
+import { Button } from "@/components/ui/button"
+
+const formSchema = z.object({
+  num_licitacion: z.string().optional(),
+  cod_bar_mc_pr: z.string().optional(),
+  ejercicio: z.number().optional(),
+})
+
+interface comboOptionsType {
+  licitaciones: { label: string; value: string }[]
+  codigos: { label: string; value: string }[]
+  ejercicios: { label: string; value: string }[]
+}
+
 export const Orders = () => {
   const [data, setData] = useState<ContractType[]>([])
+  const { execute, loading: LoadingPost } = usePost()
+  const { toast } = useToast()
 
-  const { response: ordersData, loading } = useFetch({
-    url: "/v1/data/orders",
+  const [ComboOptions, setComboOptions] = useState<comboOptionsType>({
+    licitaciones: [],
+    codigos: [],
+    ejercicios: [],
   })
 
-  useEffect(() => {
-    if (ordersData) {
-      setData(ordersData.data)
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      num_licitacion: "",
+      cod_bar_mc_pr: "",
+      ejercicio: 0,
+    },
+  })
+
+  const { response: licitacionesData, refetch: refetchLicitaciones, loading: l1 } = useFetch({
+    url: "/v1/data/order/licitaciones",
+    qs: {
+      ejercicio: form.watch("ejercicio"),
     }
-  }, [ordersData])
+  })
+
+  const { response: articulosData, refetch: refetchArticulos, loading: l2 } = useFetch({
+    url: "/v1/data/order/articulos",
+    qs: {
+      ejercicio: form.watch("ejercicio"),
+      num_licitacion: form.watch("num_licitacion"),
+    }
+  })
+
+  const { response: ejerciciosData, loading: l3 } = useFetch({
+    url: "/v1/data/order/ejercicios",
+  })
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    execute({
+      url: "/v1/data/orders",
+      method: "post",
+      body: values,
+    }).then((res) => {
+      if (res.status === 200) {
+
+        let data = res.data
+
+        setData(data)
+      } else {
+        toast({
+          title: "Error cargar los datos",
+          description: res.message || "Por favor, verifica tus credenciales",
+          variant: "destructive",
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (licitacionesData) {
+      setComboOptions((prev) => ({
+        ...prev,
+        licitaciones: licitacionesData.data,
+      }))
+    }
+  }, [licitacionesData])
+
+  useEffect(() => {
+    if (articulosData) {
+      setComboOptions((prev) => ({
+        ...prev,
+        codigos: articulosData.data,
+      }))
+    }
+  }, [articulosData])
+
+  useEffect(() => {
+    if (ejerciciosData) {
+      setComboOptions((prev) => ({
+        ...prev,
+        ejercicios: ejerciciosData.data,
+      }))
+    }
+  }, [ejerciciosData])
+
+  useEffect(() => {
+    if (form.watch("ejercicio")) {
+      refetchLicitaciones()
+      refetchArticulos()
+      form.setValue("cod_bar_mc_pr", "")
+      form.setValue("num_licitacion", "")
+    }
+  }, [form.watch("ejercicio")])
+
+  useEffect(() => {
+    if (form.watch("num_licitacion") || form.watch("ejercicio")) {
+      refetchArticulos()
+    }
+  }, [form.watch("num_licitacion"), form.watch("ejercicio")])
 
   return (
     <Layout>
@@ -38,7 +147,120 @@ export const Orders = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {loading ? (
+
+              {l1 || l2 || l3 ? (
+                <div className="flex items-center justify-center h-10">
+                  <Spinner />
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <FormCombobox
+                          label="Ejercicio"
+                          name="ejercicio"
+                          control={form.control}
+                          setValue={form.setValue}
+                          option={ComboOptions.ejercicios}
+                        />
+
+                        <FormCombobox
+                          label="Número de licitación"
+                          name="num_licitacion"
+                          control={form.control}
+                          setValue={form.setValue}
+                          option={ComboOptions.licitaciones}
+                        />
+
+                        <FormCombobox
+                          label="Código del artículo"
+                          name="cod_bar_mc_pr"
+                          control={form.control}
+                          setValue={form.setValue}
+                          option={ComboOptions.codigos}
+                          needFilter={ComboOptions.codigos.length > 20}
+                        />
+
+                      </div>
+                      <div className="flex justify-end gap-3">
+
+                        <Button variant='outline' disabled={LoadingPost} onClick={(e) => {
+                          e.preventDefault();
+                          form.reset({
+                            num_licitacion: "",
+                            cod_bar_mc_pr: "",
+                            ejercicio: 0,
+                          });
+                        }}>
+                          Limpiar
+                        </Button>
+                        <Button type="submit" disabled={LoadingPost} >
+                          Buscar
+                          {LoadingPost && (
+                            <Spinner />
+                          )}
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </div>
+              )}
+
+              {/* <div>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <FormCombobox
+                        label="Ejercicio"
+                        name="ejercicio"
+                        control={form.control}
+                        setValue={form.setValue}
+                        option={ComboOptions.ejercicios}
+                      />
+
+                      <FormCombobox
+                        label="Número de licitación"
+                        name="num_licitacion"
+                        control={form.control}
+                        setValue={form.setValue}
+                        option={ComboOptions.licitaciones}
+                      />
+
+                      <FormCombobox
+                        label="Código del artículo"
+                        name="cod_bar_mc_pr"
+                        control={form.control}
+                        setValue={form.setValue}
+                        option={ComboOptions.codigos}
+                        needFilter={ComboOptions.codigos.length > 20}
+                      />
+
+                    </div>
+                    <div className="flex justify-end gap-3">
+
+                      <Button variant='outline' disabled={LoadingPost} onClick={(e) => {
+                        e.preventDefault();
+                        form.reset({
+                          num_licitacion: "",
+                          cod_bar_mc_pr: "",
+                          ejercicio: 0,
+                        });
+                      }}>
+                        Limpiar
+                      </Button>
+                      <Button type="submit" disabled={LoadingPost} >
+                        Buscar
+                        {LoadingPost && (
+                          <Spinner />
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </div> */}
+
+              {LoadingPost ? (
                 <div className="flex items-center justify-center h-64">
                   <Spinner />
                 </div>
