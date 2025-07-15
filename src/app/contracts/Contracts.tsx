@@ -15,6 +15,7 @@ import { Form } from "@/components/ui/form"
 import { FormCombobox } from '@/components/Form'
 import { usePost, useToast } from "@/hooks"
 import { Button } from "@/components/ui/button"
+import { spawn } from "child_process"
 
 const formSchema = z.object({
   num_licitacion: z.string().optional(),
@@ -187,22 +188,24 @@ export const Contracts = () => {
                 <DataTable
                   data={data}
                   columns={[
+                    { header: "Ejercicio", accessorKey: "ejercicio" },
                     { header: "Número de licitación", accessorKey: "num_licitacion" },
-                    { header: "Código del articulo", accessorKey: "cod_bar_mc_pr" },
                     { header: "Nombre del proveedor", accessorKey: "proveedo_nom" },
+                    { header: "Partida", accessorKey: "cta_contable" },
+                    { header: "Código del articulo", accessorKey: "cod_bar_mc_pr" },
                     { header: "Descripción del articulo", accessorKey: "art_mc_nom" },
                     { header: "Presentación", accessorKey: "presentacion" },
                     { header: "marca", accessorKey: "marca" },
-                    { header: "Código", accessorKey: "codigo" },
-                    { header: "Consumido", accessorKey: "consumido" },
-                    { header: "Consumo", accessorKey: "consumo" },
-                    { header: "Máximo", accessorKey: "max" },
-                    { header: "Máximo (dinero)", accessorKey: "maximo_dinero" },
-                    { header: "Mínimo", accessorKey: "min" },
-                    { header: "Mínimo (dinero)", accessorKey: "minio_dinero" },
                     { header: "Precio unitario (Sin IVA)", accessorKey: "precio" },
-                    { header: "Partida", accessorKey: "cta_contable" },
-                    { header: "Ejercicio", accessorKey: "ejercicio" },
+                    { header: "Mínimo", accessorKey: "min" },
+                    { header: "Máximo", accessorKey: "max" },
+                    { header: "Consumido", accessorKey: "consumido" },
+                    { header: "Disponible", accessorKey: "disponible", },
+                    { header: "$ Mínimo", accessorKey: "minio_dinero" },
+                    { header: "$ Máximo", accessorKey: "maximo_dinero" },
+                    { header: "$ Consumo", accessorKey: "consumo" },
+                    { header: "$ Disponible", accessorKey: "disponible_dinero" },
+                    { header: "Código (lic)", accessorKey: "codigo" },
                     { header: "Fecha", accessorKey: "fecha" },
                     { header: "Centro", accessorKey: "unidad" },
                     { header: "Vigencia Inicio", accessorKey: "vigencia_inicio" },

@@ -169,7 +169,7 @@ function DataTableComponent<T>({
 
   return (
     <>
-      <div className="mb-3 flex justify-end">
+      <div className="mb-3 flex justify-start">
         <Button onClick={() => exportToExcelExcelJS(table, "export-seguro.xlsx")}>
           Exportar a Excel
         </Button>
