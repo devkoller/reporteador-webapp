@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useImperativeHandle, useMemo } from "react"
 import {
+  Column,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -12,9 +13,11 @@ import {
   getPaginationRowModel,
   FilterFn,
 } from "@tanstack/react-table"
+import { rankItem } from '@tanstack/match-sorter-utils';
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ColumnFilterPopover } from "./ColumnFilterPopover"
+// import { ColumnFilterPopover } from "./ColumnFilterPopover"
 import ExcelJS from "exceljs";
 
 
@@ -42,8 +45,19 @@ interface DataTableProps<T> extends DataTableHandle<T> {
 declare module '@tanstack/react-table' {
   //add fuzzy filter to the filterFns
   interface FilterFns {
-    multiSelect: FilterFn<unknown>
+    fuzzy: FilterFn<unknown>
   }
+}
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  // Store the itemRank info
+  addMeta({ itemRank })
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed
 }
 
 
@@ -56,18 +70,13 @@ function DataTableComponent<T>({
 }: DataTableProps<T>, ref: React.Ref<DataTableHandle<T>>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const multiSelectFilter: FilterFn<any> = (row, columnId, filterValue) => {
-    if (!filterValue || filterValue.length === 0) return true;
-    const cellValue = row.getValue(columnId);
-    const val = cellValue === null || cellValue === "" ? null : cellValue;
-    return filterValue.includes(val);
-  };
+
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      multiSelect: multiSelectFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -92,25 +101,25 @@ function DataTableComponent<T>({
   }));
 
 
-  const uniqueColumnValues = useMemo(() => {
-    const filteredRows = table.getFilteredRowModel().rows;
+  // const uniqueColumnValues = useMemo(() => {
+  //   const filteredRows = table.getFilteredRowModel().rows;
 
-    const valuesByColumn: Record<string, string[]> = {};
+  //   const valuesByColumn: Record<string, string[]> = {};
 
-    columns.forEach((col) => {
-      const id = col.id ?? (col as any).accessorKey;
-      if (!id) return;
+  //   columns.forEach((col) => {
+  //     const id = col.id ?? (col as any).accessorKey;
+  //     if (!id) return;
 
-      const colValues = new Set<string>();
-      filteredRows.forEach((row: any) => {
-        colValues.add(row.getValue(id));
-      });
+  //     const colValues = new Set<string>();
+  //     filteredRows.forEach((row: any) => {
+  //       colValues.add(row.getValue(id));
+  //     });
 
-      valuesByColumn[id] = Array.from(colValues).filter(Boolean);
-    });
+  //     valuesByColumn[id] = Array.from(colValues).filter(Boolean);
+  //   });
 
-    return valuesByColumn;
-  }, [table.getFilteredRowModel().rows]);
+  //   return valuesByColumn;
+  // }, [table.getFilteredRowModel().rows]);
 
 
 
@@ -175,17 +184,28 @@ function DataTableComponent<T>({
                     <TableHead key={header.id}
 
                     >
-                      <div className="max-w-[200px] flex items-center space-x-2">
+                      <div
+                        {...{
+                          className: header.column.getCanSort()
+                            ? 'cursor-pointer select-none max-w-[200px] flex items-center space-x-2'
+                            : '',
+                          onClick: header.column.getToggleSortingHandler(),
+                        }}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(header.column.columnDef.header, header.getContext())}
-
-                        <ColumnFilterPopover
-                          columnId={header.column.id}
-                          column={header.column}
-                          values={uniqueColumnValues[header.column.id] || []}
-                        />
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
                       </div>
+                      <>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} />
+                          </div>
+                        ) : null}
+                      </>
                     </TableHead>
                   )
                 })}
@@ -379,6 +399,81 @@ function PaginationControls({ table }: { table: any }) {
         Última »
       </Button>
     </div>
+  )
+}
+
+function Filter({ column }: { column: Column<any, unknown> }) {
+  // Determina el tipo de filtro configurado en la columna, por defecto es 'text'
+  const filterType = (column.columnDef as any)?.meta?.filterType || 'text';
+
+  if (filterType === 'select') {
+    // Para el select, obtenemos las opciones configuradas en la columna
+    const options = (column.columnDef as any)?.meta?.filterOptions || [];
+    return (
+      <>
+        <Select value={(column.getFilterValue() ?? '') as string} onValueChange={(value) => {
+          if (value === 'all') {
+            column.setFilterValue(undefined)
+          } else {
+            column.setFilterValue(value)
+          }
+        }}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Selecciona..." />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos</SelectItem>
+            {options.map((option: string) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </>
+    );
+  } else {
+    // Por defecto, se usa el input de texto con debounce
+    return (
+      <DebouncedInput
+        type="text"
+        value={(column.getFilterValue() ?? '') as string}
+        onChange={(value) => column.setFilterValue(value)}
+        placeholder={`Buscar...`}
+        className="w-36 border shadow rounded"
+      />
+    );
+  }
+}
+
+
+
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value])
+
+  return (
+    <Input {...props} value={value} onChange={e => setValue(e.target.value)} />
   )
 }
 

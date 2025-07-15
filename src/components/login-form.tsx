@@ -23,10 +23,7 @@ export function LoginForm({
                   className="h-[2cm]"
                 />
                 <div className="flex flex-col justify-center">
-                  <h1 className="text-2xl font-bold">Bienvenido a Sigma Finanzas</h1>
-                  <p className="text-balance text-muted-foreground">
-                    Hospital Civil de Guadalajara
-                  </p>
+                  <h1 className="text-2xl font-bold">Bienvenido a REPORTES</h1>
                 </div>
               </div>
               {children}
@@ -41,6 +38,11 @@ export function LoginForm({
           </div>
         </CardContent>
       </Card>
+      <div>
+        <p className="text-center text-sm text-muted-foreground">
+          © {new Date().getFullYear()} Resumen Estadístico y Predictivo Operacional para Reconocer Tendencias Económicas en Salud. Todos los derechos reservados.
+        </p>
+      </div>
     </div>
   )
 }

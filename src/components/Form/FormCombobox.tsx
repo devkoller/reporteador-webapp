@@ -53,7 +53,11 @@ export const FormCombobox = ({ control, label, name, description, required, need
     () => {
       if (!filterText && needFilter) return []
       return option.filter(item => {
-        return item?.label?.toLowerCase().includes(filterText.toLowerCase())
+        let label = item?.label || ''
+        if (typeof label !== 'string') {
+          label = String(label)
+        }
+        return label.toLowerCase().includes(filterText.toLowerCase())
       }
       )
     },
