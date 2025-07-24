@@ -19,11 +19,13 @@ const formSchema = z.object({
   num_licitacion: z.string().optional(),
   cod_bar_mc_pr: z.string().optional(),
   ejercicio: z.number().optional(),
+  proveedo_nom: z.string().optional(),
 })
 interface comboOptionsType {
   licitaciones: { label: string; value: string }[]
   codigos: { label: string; value: string }[]
   ejercicios: { label: string; value: string }[]
+  proveedores: { label: string; value: string }[]
 }
 
 export const Contracts = () => {
@@ -35,6 +37,7 @@ export const Contracts = () => {
     licitaciones: [],
     codigos: [],
     ejercicios: [],
+    proveedores: [],
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,6 +46,7 @@ export const Contracts = () => {
       num_licitacion: "",
       cod_bar_mc_pr: "",
       ejercicio: 0,
+      proveedo_nom: "",
     },
   })
 
@@ -59,12 +63,23 @@ export const Contracts = () => {
     qs: {
       ejercicio: form.watch("ejercicio"),
       num_licitacion: form.watch("num_licitacion"),
+      proveedo_nom: form.watch("proveedo_nom"),
+    }
+  })
+
+  const { response: proveeData, refetch: refetchProvee } = useFetch({
+    url: "/v1/data/proveedores",
+    qs: {
+      ejercicio: form.watch("ejercicio"),
+      num_licitacion: form.watch("num_licitacion"),
+
     }
   })
 
   const { response: ejerciciosData, } = useFetch({
     url: "/v1/data/ejercicios",
   })
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     execute({
@@ -108,6 +123,15 @@ export const Contracts = () => {
   }, [articulosData])
 
   useEffect(() => {
+    if (proveeData) {
+      setComboOptions((prev) => ({
+        ...prev,
+        proveedores: proveeData.data,
+      }))
+    }
+  }, [proveeData])
+
+  useEffect(() => {
     if (ejerciciosData) {
       setComboOptions((prev) => ({
         ...prev,
@@ -128,8 +152,15 @@ export const Contracts = () => {
   useEffect(() => {
     if (form.watch("num_licitacion") || form.watch("ejercicio")) {
       refetchArticulos()
+      refetchProvee()
     }
   }, [form.watch("num_licitacion"), form.watch("ejercicio")])
+
+  useEffect(() => {
+    if (form.watch("proveedo_nom")) {
+      refetchArticulos()
+    }
+  }, [form.watch("proveedo_nom")])
 
 
   return (
@@ -153,7 +184,7 @@ export const Contracts = () => {
               <div>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       <FormCombobox
                         label="Ejercicio"
                         name="ejercicio"
@@ -168,6 +199,14 @@ export const Contracts = () => {
                         control={form.control}
                         setValue={form.setValue}
                         option={ComboOptions.licitaciones}
+                      />
+
+                      <FormCombobox
+                        label="Proveedor"
+                        name="proveedo_nom"
+                        control={form.control}
+                        setValue={form.setValue}
+                        option={ComboOptions.proveedores}
                       />
 
                       <FormCombobox

@@ -19,12 +19,14 @@ const formSchema = z.object({
   num_licitacion: z.string().optional(),
   cod_bar_mc_pr: z.string().optional(),
   ejercicio: z.number().optional(),
+  proveedo_nom: z.string().optional(),
 })
 
 interface comboOptionsType {
   licitaciones: { label: string; value: string }[]
   codigos: { label: string; value: string }[]
   ejercicios: { label: string; value: string }[]
+  proveedores: { label: string; value: string }[]
 }
 
 export const Orders = () => {
@@ -36,6 +38,7 @@ export const Orders = () => {
     licitaciones: [],
     codigos: [],
     ejercicios: [],
+    proveedores: [],
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -44,6 +47,7 @@ export const Orders = () => {
       num_licitacion: "",
       cod_bar_mc_pr: "",
       ejercicio: 0,
+      proveedo_nom: "",
     },
   })
 
@@ -54,11 +58,20 @@ export const Orders = () => {
     }
   })
 
+  const { response: proveeData, refetch: refetchProvee, loading: l4 } = useFetch({
+    url: "/v1/data/order/proveedores",
+    qs: {
+      ejercicio: form.watch("ejercicio"),
+      num_licitacion: form.watch("num_licitacion"),
+    }
+  })
+
   const { response: articulosData, refetch: refetchArticulos, loading: l2 } = useFetch({
     url: "/v1/data/order/articulos",
     qs: {
       ejercicio: form.watch("ejercicio"),
       num_licitacion: form.watch("num_licitacion"),
+      proveedo_nom: form.watch("proveedo_nom"),
     }
   })
 
@@ -97,6 +110,15 @@ export const Orders = () => {
   }, [licitacionesData])
 
   useEffect(() => {
+    if (proveeData) {
+      setComboOptions((prev) => ({
+        ...prev,
+        proveedores: proveeData.data,
+      }))
+    }
+  }, [proveeData])
+
+  useEffect(() => {
     if (articulosData) {
       setComboOptions((prev) => ({
         ...prev,
@@ -125,9 +147,16 @@ export const Orders = () => {
 
   useEffect(() => {
     if (form.watch("num_licitacion") || form.watch("ejercicio")) {
+      refetchProvee()
       refetchArticulos()
     }
   }, [form.watch("num_licitacion"), form.watch("ejercicio")])
+
+  useEffect(() => {
+    if (form.watch("proveedo_nom")) {
+      refetchArticulos()
+    }
+  }, [form.watch("proveedo_nom")])
 
   return (
     <Layout>
@@ -156,7 +185,7 @@ export const Orders = () => {
                 <div className="mb-4">
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mb-4">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <FormCombobox
                           label="Ejercicio"
                           name="ejercicio"
@@ -171,6 +200,14 @@ export const Orders = () => {
                           control={form.control}
                           setValue={form.setValue}
                           option={ComboOptions.licitaciones}
+                        />
+
+                        <FormCombobox
+                          label="Proveedor"
+                          name="proveedo_nom"
+                          control={form.control}
+                          setValue={form.setValue}
+                          option={ComboOptions.proveedores}
                         />
 
                         <FormCombobox
