@@ -58,7 +58,7 @@ export const Orders = () => {
     }
   })
 
-  const { response: proveeData, refetch: refetchProvee, loading: l4 } = useFetch({
+  const { response: proveeData, refetch: refetchProvee, } = useFetch({
     url: "/v1/data/order/proveedores",
     qs: {
       ejercicio: form.watch("ejercicio"),
