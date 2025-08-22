@@ -260,6 +260,8 @@ export const Contracts = () => {
                     { header: "Precio unitario (Sin IVA)", accessorKey: "precio" },
                     { header: "Mínimo", accessorKey: "min" },
                     { header: "Máximo", accessorKey: "max" },
+                    { header: "Ampliado", accessorKey: "ampliado" },
+                    { header: "Porcentaje", accessorKey: "porcentaje" },
                     { header: "Consumido", accessorKey: "consumido" },
                     { header: "Disponible", accessorKey: "disponible", },
                     { header: "$ Mínimo", accessorKey: "minio_dinero" },
