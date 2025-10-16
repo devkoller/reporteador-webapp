@@ -16,7 +16,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Form } from '@/components/ui/form'
-import { FormCombobox } from '@/components/Form'
+import { FormCombobox, FormInput } from '@/components/Form'
 import { usePost, useToast, useFetch } from '@/hooks'
 import { Button } from '@/components/ui/button'
 
@@ -25,6 +25,7 @@ const formSchema = z.object({
 	cod_bar_mc_pr: z.string().optional(),
 	ejercicio: z.number().optional(),
 	proveedo_nom: z.string().optional(),
+	buscador: z.string().optional(),
 })
 interface comboOptionsType {
 	licitaciones: { label: string; value: string }[]
@@ -52,6 +53,7 @@ export const Contracts = () => {
 			cod_bar_mc_pr: '',
 			ejercicio: 0,
 			proveedo_nom: '',
+			buscador: '',
 		},
 	})
 
@@ -190,6 +192,15 @@ export const Contracts = () => {
 										onSubmit={form.handleSubmit(onSubmit)}
 										className="space-y-4 mb-4"
 									>
+										<div className="grid  gap-4">
+											<FormInput
+												label="Buscador general"
+												name="buscador"
+												placeholder='Busca por proveedor, codigo, descripcion, ejercicio, partida, uh, partida o licitación. Ejemplo: "2023 Medicamento 2551 lpn calcio"'
+												control={form.control}
+												// setValue={form.setValue}
+											/>
+										</div>
 										<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 											<FormCombobox
 												label="Ejercicio"
@@ -234,6 +245,7 @@ export const Contracts = () => {
 														num_licitacion: '',
 														cod_bar_mc_pr: '',
 														ejercicio: 0,
+														buscador: '',
 													})
 												}}
 											>
