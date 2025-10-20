@@ -236,6 +236,10 @@ export const Contracts = () => {
 											/>
 										</div>
 										<div className="flex justify-end gap-3">
+											<Button type="submit" disabled={LoadingPost}>
+												Buscar
+												{LoadingPost && <Spinner />}
+											</Button>
 											<Button
 												variant="outline"
 												disabled={LoadingPost}
@@ -250,10 +254,6 @@ export const Contracts = () => {
 												}}
 											>
 												Limpiar
-											</Button>
-											<Button type="submit" disabled={LoadingPost}>
-												Buscar
-												{LoadingPost && <Spinner />}
 											</Button>
 										</div>
 									</form>
@@ -294,6 +294,7 @@ export const Contracts = () => {
 										{ header: 'Mínimo', accessorKey: 'min' },
 										{ header: 'Máximo', accessorKey: 'max' },
 										{ header: 'Ampliado', accessorKey: 'ampliado' },
+										{ header: 'Pedidos', accessorKey: 'pedidos' },
 										{ header: 'Porcentaje', accessorKey: 'porcentaje' },
 										{ header: 'Consumido', accessorKey: 'consumido' },
 										{ header: 'Reservado', accessorKey: 'reservada' },
