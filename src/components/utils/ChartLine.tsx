@@ -24,7 +24,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { it } from 'node:test'
+// import { it } from 'node:test'
 
 import { formatNumber, formatCurrency } from '@/utils/functions'
 
@@ -91,7 +91,7 @@ export interface GenericChartProps<T> {
 export function GenericChart<T>({
 	data,
 	getKey,
-	sortBy = 'count',
+	// sortBy = 'count',
 	chartType,
 	transformKey,
 	colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28FD0'],
@@ -103,7 +103,7 @@ export function GenericChart<T>({
 	searchText = '',
 	onSearch,
 	className,
-	sortOrder = 'desc',
+	// sortOrder = 'desc',
 	sumBy,
 	showLegend = true,
 	isCurrency = false,

@@ -1,8 +1,8 @@
-import { AppointmentType } from '@/types'
+// import { AppointmentType } from '@/types'
 import { FiltersPanel, GenericChart } from '@/components/utils'
-import { getAgeGroup } from '@/utils/functions'
+// import { getAgeGroup } from '@/utils/functions'
 import { useEffect, useState } from 'react'
-import { ContractType, ContractAdvanceType } from '@/types'
+import { ContractAdvanceType } from '@/types'
 import { useDynamicFilters, useFetch, usePost } from '@/hooks'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form'
 import { Form } from '@/components/ui/form'
 import z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { formatNumber, formatCurrency } from '@/utils/functions'
+// import { formatNumber, formatCurrency } from '@/utils/functions'
 import { GenericComposedChart } from '@/components/utils/GenericComposedChart'
 
 interface comboOptionsType {
@@ -19,13 +19,6 @@ interface comboOptionsType {
 	// codigos: { label: string; value: string }[]
 	ejercicios: { label: string; value: string }[]
 	// proveedores: { label: string; value: string }[]
-}
-
-interface ContractQuantityType {
-	uh: string
-	num_licitacion: string
-	proveedo_nom: string
-	importe_maximo_movimientos_ci: number
 }
 
 interface Contracts {}
