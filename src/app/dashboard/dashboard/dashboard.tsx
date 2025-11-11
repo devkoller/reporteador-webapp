@@ -1,7 +1,10 @@
-import { Layout } from "@/components/auth"
+import { Layout } from '@/components/auth'
+import { Contracts } from './Contracts'
 
 export const dashboard = () => {
-  return (
-    <Layout>dashboard</Layout>
-  )
+	return (
+		<Layout>
+			<Contracts></Contracts>
+		</Layout>
+	)
 }

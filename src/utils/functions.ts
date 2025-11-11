@@ -9,14 +9,35 @@ interface handleExcelProps {
 }
 
 function formatCurrency(value: number): string {
-	return new Intl.NumberFormat("en-US", {
-		style: "currency",
-		currency: "USD",
+	return new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'USD',
 	}).format(value)
 }
 
+function formatNumber(value: number | string | undefined | null): string {
+	// Si es undefined, null o string vacío, devolvemos cadena vacía
+	if (value === undefined || value === null || value === '') {
+		return ''
+	}
+
+	// Intentar convertir a número
+	const num = typeof value === 'number' ? value : parseFloat(value)
+
+	// Si no es un número válido, devolvemos cadena vacía
+	if (isNaN(num)) {
+		return ''
+	}
+
+	// Formatear
+	return num.toLocaleString('en-US', {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	})
+}
+
 function getAgeGroup(fecha_nac?: string): string {
-	if (!fecha_nac) return "Desconocido"
+	if (!fecha_nac) return 'Desconocido'
 
 	const birth = new Date(fecha_nac)
 	const now = new Date()
@@ -26,12 +47,12 @@ function getAgeGroup(fecha_nac?: string): string {
 
 	// 1. Menos de 30 días
 	if (diffDays < 30) {
-		return "0 - 30 días"
+		return '0 - 30 días'
 	}
 
 	// 2. Entre 30 días y menos de 1 año
 	if (diffDays < 365.25) {
-		return "1 mes a menor de 1 año"
+		return '1 mes a menor de 1 año'
 	}
 
 	// A partir de aquí contamos en años completos
@@ -39,7 +60,7 @@ function getAgeGroup(fecha_nac?: string): string {
 
 	// 3. De 1 a 4 años
 	if (ageYears <= 4) {
-		return "01 – 04 años"
+		return '01 – 04 años'
 	}
 
 	// 4. Intervalos de 5 años (5–9, 10–14, …, 60–64)
@@ -53,11 +74,11 @@ function getAgeGroup(fecha_nac?: string): string {
 	}
 
 	// 5. 65 años en adelante
-	return "65+ años"
+	return '65+ años'
 }
 
 function tiempoAMilisegundos(hhmm: string): number {
-	const [h, m] = hhmm.split(":").map(Number)
+	const [h, m] = hhmm.split(':').map(Number)
 	return (h * 60 + m) * 60_000 // horas→minutos→milisegundos
 }
 
@@ -73,7 +94,7 @@ const handleExcel = async ({ data, Columns, execute }: handleExcelProps) => {
 	const filteredData = data.map((item) => {
 		const filteredItem: any = {}
 		Columns.forEach((col: genericType) => {
-			if ("accessorKey" in col) {
+			if ('accessorKey' in col) {
 				filteredItem[col.accessorKey as keyof genericType] = item[
 					col.accessorKey as keyof genericType
 				]
@@ -85,13 +106,13 @@ const handleExcel = async ({ data, Columns, execute }: handleExcelProps) => {
 	})
 
 	execute({
-		url: "/api/patients/report/excel",
+		url: '/api/patients/report/excel',
 		body: {
 			columns: Columns.map((col) =>
-				"accessorKey" in col ? col.accessorKey : undefined
+				'accessorKey' in col ? col.accessorKey : undefined
 			),
 			data: filteredData,
-			title: "Citas",
+			title: 'Citas',
 		},
 	})
 		.then((resp) => {
@@ -102,24 +123,25 @@ const handleExcel = async ({ data, Columns, execute }: handleExcelProps) => {
 				byteNumbers[i] = byteCharacters.charCodeAt(i)
 			}
 
-			const blob = new Blob([byteNumbers], { type: "application/xlsx" })
+			const blob = new Blob([byteNumbers], { type: 'application/xlsx' })
 			const url = URL.createObjectURL(blob)
 
-			const a = document.createElement("a")
+			const a = document.createElement('a')
 			a.href = url
-			a.download = "Citas.xlsx"
+			a.download = 'Citas.xlsx'
 			document.body.appendChild(a)
 			a.click()
 			a.remove()
 			URL.revokeObjectURL(url)
 		})
 		.catch((error) => {
-			console.log("🚀 > Data.tsx:51 > handleExcel > error:", error)
+			console.log('🚀 > Data.tsx:51 > handleExcel > error:', error)
 		})
 }
 
 export {
 	formatCurrency,
+	formatNumber,
 	getAgeGroup,
 	tiempoAMilisegundos,
 	formatoHHMMSS,

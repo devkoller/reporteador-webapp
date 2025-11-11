@@ -34,3 +34,24 @@ export interface ContractType {
 	vigencia_fin: string
 	vigencia_inicio: string
 }
+
+export interface ContractAdvanceType extends ContractType {
+	partida: number
+	disponible_contrato: number
+	precio_ci: number
+	importe_maximo_ci: number
+	importe_maximo_movimientos_ci: number
+	importe_disponible_contrato: number
+	importe_disponible_ci: number
+	pendiente_en_oc: number
+	recibido_en_oc: number
+	cantidad_en_oc: number
+	cantidad_convertida_en_oc: number
+	factor_conversion: number
+	monto_recibido: number
+	monto_pendiente: number
+	monto_cancelado: number
+	monto_total: number
+	uh: string
+	capitulo: number
+}
