@@ -1,5 +1,5 @@
 // import { AppointmentType } from '@/types'
-import { FiltersPanel, GenericChart } from '@/components/utils'
+import { DataTable, FiltersPanel, GenericChart } from '@/components/utils'
 // import { getAgeGroup } from '@/utils/functions'
 import { useEffect, useState } from 'react'
 import { ContractAdvanceType } from '@/types'
@@ -64,6 +64,7 @@ export const Contracts = ({}: Contracts) => {
 		'proveedo_nom',
 		'partida',
 		'capitulo',
+		'codigo',
 	]
 	const fastFilterableKeys: (keyof ContractAdvanceType)[] = [
 		'uh',
@@ -182,7 +183,7 @@ export const Contracts = ({}: Contracts) => {
 							field: 'monto_pendiente',
 							label: 'Pendiente en OC',
 							type: 'bar',
-							sumBy: (r) => r.monto_pendiente,
+							sumBy: (r) => r.monto_pendiente ?? 0,
 							fill: '#f44336',
 							// stroke: '#42a5f5',
 							stackId: 'A',
@@ -191,7 +192,7 @@ export const Contracts = ({}: Contracts) => {
 							field: 'monto_recibido',
 							label: 'Devengado',
 							type: 'bar',
-							sumBy: (r) => r.monto_recibido,
+							sumBy: (r) => r.monto_recibido ?? 0,
 							fill: '#66bb6a',
 							stackId: 'A',
 						},
@@ -199,7 +200,7 @@ export const Contracts = ({}: Contracts) => {
 							field: 'monto_total',
 							label: 'Total en OC',
 							type: 'bar',
-							sumBy: (r) => r.monto_total,
+							sumBy: (r) => r.monto_total ?? 0,
 							stroke: '#2196f3',
 							// yAxisId: 'right',
 							// stackId: 'A',
@@ -217,7 +218,7 @@ export const Contracts = ({}: Contracts) => {
 
 						{
 							field: 'importe_maximo_movimientos_ci',
-							label: 'Importe Máx. Mov.',
+							label: 'Importe máximo C/I contrato',
 							type: 'area',
 							sumBy: (r) => r.importe_maximo_movimientos_ci,
 							fill: '#C9FFF4',
@@ -262,19 +263,19 @@ export const Contracts = ({}: Contracts) => {
 						{
 							field: 'monto_recibido',
 							label: 'Recibido en OC',
-							sumBy: (r) => r.monto_recibido,
+							sumBy: (r) => r.monto_recibido ?? 0,
 							fill: '#4caf50',
 						},
 						{
 							field: 'monto_pendiente',
 							label: 'Pendiente en OC',
-							sumBy: (r) => r.monto_pendiente,
+							sumBy: (r) => r.monto_pendiente ?? 0,
 							fill: '#f44336',
 						},
 						{
 							field: 'monto_total',
 							label: 'Total en OC',
-							sumBy: (r) => r.monto_total,
+							sumBy: (r) => r.monto_total ?? 0,
 							fill: '#2196f3',
 						},
 						{
@@ -330,6 +331,91 @@ export const Contracts = ({}: Contracts) => {
 					description="Por partida"
 					showLegend={false}
 				/>
+			</div>
+			<div>
+				<DataTable
+					data={filteredData}
+					columns={[
+						{ header: 'Ejercicio', accessorKey: 'anio' },
+						{ header: 'UH', accessorKey: 'uh' },
+						{
+							header: 'Número de licitación',
+							accessorKey: 'num_licitacion',
+						},
+						{
+							header: 'Nombre del proveedor',
+							accessorKey: 'proveedo_nom',
+						},
+						{ header: 'Partida', accessorKey: 'partida' },
+						{
+							header: 'Código del articulo',
+							accessorKey: 'codigo',
+						},
+						{
+							header: 'Descripción del articulo',
+							accessorKey: 'articulo',
+						},
+						{ header: 'Presentación', accessorKey: 'presentacion' },
+						{ header: 'marca', accessorKey: 'marca' },
+						{
+							header: 'Precio unitario (Sin IVA)',
+							accessorKey: 'precio',
+						},
+						{
+							header: 'Precio unitario (Con impuestos)',
+							accessorKey: 'precio_ci',
+						},
+						{ header: 'Mínimo', accessorKey: 'min' },
+						{ header: 'Máximo', accessorKey: 'max' },
+						{ header: 'Ampliado', accessorKey: 'ampliado' },
+						{ header: 'Pedidos', accessorKey: 'pedidos' },
+						{ header: 'Porcentaje', accessorKey: 'porcentaje' },
+						{ header: 'Consumido', accessorKey: 'consumido' },
+						{ header: 'Reservado', accessorKey: 'reservada' },
+						{ header: 'Reasignado', accessorKey: 'reasignada' },
+						{ header: 'Disponible (pzs)', accessorKey: 'disponible_contrato' },
+						// { header: '$ Mínimo', accessorKey: 'minio_dinero' },
+						// { header: '$ Máximo', accessorKey: 'importe_maximo_ci' },
+						// { header: '$ Consumo', accessorKey: 'consumo' },
+						// {
+						// 	header: '$ Disponible (1)',
+						// 	accessorKey: 'disponible_dinero',
+						// },
+						// { header: 'Código (lic)', accessorKey: 'codigo' },
+						// { header: 'Fecha', accessorKey: 'fecha' },
+						// {
+						// 	header: 'Vigencia Inicio',
+						// 	accessorKey: 'vigencia_inicio',
+						// },
+						{ header: '$ Pendiente', accessorKey: 'monto_pendiente' },
+						{ header: '$ Devengado', accessorKey: 'monto_recibido' },
+						{ header: '$ Solicitado en OC', accessorKey: 'monto_total' },
+						{ header: '$ Cancelado en OC', accessorKey: 'monto_cancelado' },
+						{ header: 'Vigencia Fin', accessorKey: 'vigencia_fin' },
+					]}
+				/>
+			</div>
+			<div className="mt-3 text-xs text-muted-foreground leading-relaxed text-left max-w-[700px]">
+				<p>
+					• <strong>Disponible (pzs):</strong> se entiende como lo máximo
+					contratado menos los pedidos que están autorizados por la coordinación
+					administrativa, validado por la CGF o en orden de compra.
+				</p>
+				<p>
+					• <strong>$Disponible (1):</strong> es el importe disponible para
+					realizar pedidos (Disponible (pzs) * Precio C/I).
+				</p>
+				<p>
+					• <strong>$Pendiente:</strong> es lo que está en orden de compra pero
+					aún no se ha recibido.
+				</p>
+				<p>
+					• <strong>$Recibido:</strong> es el monto ya recibido o devengado.
+				</p>
+				{/* <p>
+					• <strong>$Total OC:</strong> representa el importe máximo del
+					contrato.
+				</p> */}
 			</div>
 
 			{/* <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
