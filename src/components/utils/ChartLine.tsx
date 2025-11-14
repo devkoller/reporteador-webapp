@@ -36,6 +36,7 @@ type Metric<T> = {
 	label?: string // etiqueta legible (Legend)
 	sumBy: (row: T) => number // cómo sumar desde el dato crudo
 	fill?: string
+	valueFormatter?: (n: number) => string // << NUEVO
 }
 
 export interface GenericChartProps<T> {
@@ -261,8 +262,25 @@ export function GenericChart<T>({
 								}
 							>
 								<XAxis dataKey="key" />
-								<YAxis />
-								<Tooltip />
+								<YAxis
+									width={130}
+									tickFormatter={(value) =>
+										value.toLocaleString('en-US', {
+											minimumFractionDigits: 2,
+											maximumFractionDigits: 2,
+										})
+									}
+								/>
+								<Tooltip
+									formatter={(value, name, props) => {
+										name
+										const metric = metrics?.find(
+											(m) => m.field === props.dataKey
+										)
+										const format = metric?.valueFormatter || formatNumber
+										return format(Number(value))
+									}}
+								/>
 								{hasMulti ? (
 									metrics!.map((m, idx) => (
 										<Bar
@@ -350,13 +368,22 @@ export function GenericChart<T>({
 									innerRadius={0}
 									outerRadius={height / 3}
 									onClick={({ name }) => handleClick(name as string)}
-									label
+									label={customLabel}
 								>
 									{chartData.map((entry, idx) => (
 										<Cell key={entry.key} fill={colors[idx % colors.length]} />
 									))}
 								</Pie>
-								<Tooltip />
+								<Tooltip
+									formatter={(value, name, props) => {
+										name
+										const metric = metrics?.find(
+											(m) => m.field === props.dataKey
+										)
+										const format = metric?.valueFormatter || formatNumber
+										return format(Number(value))
+									}}
+								/>
 								{showLegend && (
 									<Legend
 										formatter={(value, entry) => {
@@ -391,4 +418,8 @@ const CustomTooltip = ({ active, payload }: any) => {
 	}
 
 	return null
+}
+
+const customLabel = (entry: any) => {
+	return `${entry.name} (${formatNumber(entry.value)})`
 }
