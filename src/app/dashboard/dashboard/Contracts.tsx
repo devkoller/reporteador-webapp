@@ -317,7 +317,7 @@ export const Contracts = ({}: Contracts) => {
 					onFilter={(val) => handleInclude('capitulo', val)}
 					title="Por capitulo"
 					description="Por capitulo"
-					showLegend={false}
+					showLegend={true}
 				/>
 			</div>
 			<div className="">

@@ -76,8 +76,27 @@ export function GenericComposedChart<T>({
 			>
 				<CartesianGrid stroke="#f5f5f5" />
 				<XAxis dataKey={xDataKey} />
-				<YAxis yAxisId="left" />
-				<YAxis yAxisId="right" orientation="right" />
+				<YAxis
+					yAxisId="left"
+					width={130}
+					tickFormatter={(value) =>
+						value.toLocaleString('en-US', {
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2,
+						})
+					}
+				/>
+				<YAxis
+					yAxisId="right"
+					orientation="right"
+					width={130}
+					tickFormatter={(value) =>
+						value.toLocaleString('en-US', {
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2,
+						})
+					}
+				/>
 				<Tooltip formatter={(v: number) => Number(v).toLocaleString()} />
 				<Legend />
 
