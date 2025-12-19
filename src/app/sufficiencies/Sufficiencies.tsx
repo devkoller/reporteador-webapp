@@ -257,6 +257,7 @@ export const Sufficiencies = () => {
 											header: 'Presupuesto',
 											accessorKey: 'clave_presupuestal',
 										},
+										{ header: 'Presentación', accessorKey: 'presentacion' },
 									]}
 								/>
 							)}

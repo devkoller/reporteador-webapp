@@ -315,6 +315,7 @@ export const Contracts = () => {
 											accessorKey: 'vigencia_inicio',
 										},
 										{ header: 'Vigencia Fin', accessorKey: 'vigencia_fin' },
+										{ header: 'Presentación', accessorKey: 'presentacion' },
 									]}
 								/>
 							)}
