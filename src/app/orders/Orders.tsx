@@ -28,6 +28,23 @@ const formSchema = z.object({
 	proveedo_nom: z.string().optional(),
 })
 
+export const numberFormatter = new Intl.NumberFormat('es-MX', {
+	maximumFractionDigits: 2,
+})
+
+export const currencyFormatter = new Intl.NumberFormat('es-MX', {
+	minimumFractionDigits: 2,
+	maximumFractionDigits: 2,
+})
+
+export const formatNumber = (value: unknown, formatter: Intl.NumberFormat) => {
+	if (value === null || value === undefined || value === '') return ''
+	const raw =
+		typeof value === 'number' ? value : Number(String(value).replace(/,/g, ''))
+	if (Number.isNaN(raw)) return String(value)
+	return formatter.format(raw)
+}
+
 interface comboOptionsType {
 	licitaciones: { label: string; value: string }[]
 	codigos: { label: string; value: string }[]
@@ -320,63 +337,114 @@ export const Orders = () => {
 								<DataTable
 									data={data}
 									columns={[
-										{ header: 'Ejercicio', accessorKey: 'año' },
-										{ header: 'Numero de orden', accessorKey: 'no_orden' },
-										{ header: 'Numero de pedido', accessorKey: 'no_ped' },
+										{ header: 'Ejercicio', accessorKey: 'anio' },
 										{ header: 'Licitación', accessorKey: 'num_licitacion' },
+										{ header: 'UH', accessorKey: 'uh' },
+										{ header: 'Numero de orden', accessorKey: 'no_orden' },
+										{ header: 'Status', accessorKey: 'status_orden' },
+										{ header: 'Suministro', accessorKey: 'mes_sumi' },
+										{ header: 'Proveedor', accessorKey: 'proveedo_nom' },
 										{
 											header: 'Código del articulo',
-											accessorKey: 'cod_bar_mc_pr',
+											accessorKey: 'codigo',
 										},
-										{ header: 'Descripcion', accessorKey: 'descripcion' },
-										{ header: 'Cantidad', accessorKey: 'cantidad' },
-										{ header: '$ Precio', accessorKey: 'precio' },
+										{ header: 'Descripcion', accessorKey: 'articulo' },
+										{ header: 'Partida', accessorKey: 'partida' },
 										{
-											header: 'Cantidad Cancelada',
-											accessorKey: 'cant_cancelada',
+											header: '$ Precio C/I',
+											accessorKey: 'precio_ci',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
 										},
-										{ header: '$ Subtotal orden', accessorKey: 'subtotal_ord' },
+
 										{
-											header: '$ Subtotal pedido',
-											accessorKey: 'subtotal_ped',
+											header: 'Cantidad OC',
+											accessorKey: 'cantidad_en_oc',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
 										},
-										{ header: '$ Total orden', accessorKey: 'total_ord' },
-										{ header: 'Centro', accessorKey: 'centro' },
-										{ header: 'Almacén', accessorKey: 'almacen_deno' },
+										{
+											header: 'Pendiente OC',
+											accessorKey: 'pendiente_en_oc',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Recibido OC',
+											accessorKey: 'recibido_en_oc',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Cantidad convertida OC',
+											accessorKey: 'cantidad_convertida_en_oc',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Factor conversion',
+											accessorKey: 'factor_conversion',
+										},
+										{
+											header: '$ Total',
+											accessorKey: 'monto_total',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: '$ Recibido',
+											accessorKey: 'monto_recibido',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: '$ Pendiente',
+											accessorKey: 'monto_pendiente',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: '$ Cancelado',
+											accessorKey: 'monto_cancelado',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+
+										// {
+										// 	header: '$ Subtotal pedido',
+										// 	accessorKey: 'subtotal_ped',
+										// },
+										// { header: '$ Total orden', accessorKey: 'total_ord' },
+										// { header: 'Centro', accessorKey: 'centro' },
+										// { header: 'Almacén', accessorKey: 'almacen_deno' },
+
+										// {
+										// 	header: 'Condiciones de pago',
+										// 	accessorKey: 'condiciones_pago',
+										// },
+										// { header: 'IVA', accessorKey: 'iva' },
+										// { header: '$ IVA Orden', accessorKey: 'iva_ord' },
+										// { header: '$ IVA Pedido', accessorKey: 'iva_ped' },
+										// { header: 'Monto ieps', accessorKey: 'monto_ieps' },
+										// { header: '% ieps', accessorKey: 'porciento_ieps' },
+										// { header: 'Servicio orden', accessorKey: 'servicio_ord' },
+										// { header: 'Servicio pedido', accessorKey: 'servicio_ped' },
+										// {
+										// 	header: 'Suministro orden',
+										// 	accessorKey: 'suministro_ord',
+										// },
 										{
 											header: 'Cinco al millar',
 											accessorKey: 'cinco_al_millar',
 											cell: (info) => (info.getValue() ? 'Sí' : 'No'),
 										},
 										{
-											header: 'Condiciones de pago',
-											accessorKey: 'condiciones_pago',
-										},
-										{ header: 'Estado de la orden', accessorKey: 'estado_ord' },
-										{ header: 'Estado del pedido', accessorKey: 'estado_ped' },
-										{ header: 'Fecha de envió', accessorKey: 'fecha_envio' },
-										{ header: 'Fondeo orden', accessorKey: 'fondeo_ord' },
-										{ header: 'Fondeo pedido', accessorKey: 'fondeo_ped' },
-										{ header: 'IVA', accessorKey: 'iva' },
-										{ header: '$ IVA Orden', accessorKey: 'iva_ord' },
-										{ header: '$ IVA Pedido', accessorKey: 'iva_ped' },
-										{ header: 'Monto ieps', accessorKey: 'monto_ieps' },
-										{ header: 'Objeto del gasto Orden', accessorKey: 'og_ord' },
-										{
-											header: 'Objeto del gasto Pedido',
-											accessorKey: 'og_ped',
-										},
-										{ header: '% ieps', accessorKey: 'porciento_ieps' },
-										{ header: 'Proveedor', accessorKey: 'proveedo_nom' },
-										{ header: 'Servicio orden', accessorKey: 'servicio_ord' },
-										{ header: 'Servicio pedido', accessorKey: 'servicio_ped' },
-										{
-											header: 'Suministro orden',
-											accessorKey: 'suministro_ord',
+											header: 'Fecha envio',
+											accessorKey: 'fecha_envio',
 										},
 										{
-											header: 'Suministro pedido',
-											accessorKey: 'suministro_ped',
+											header: 'Fecha limite',
+											accessorKey: 'fecha_limite',
 										},
 										{
 											header: 'Tiempo de entrega',

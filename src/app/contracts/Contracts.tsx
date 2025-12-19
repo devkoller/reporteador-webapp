@@ -19,6 +19,11 @@ import { Form } from '@/components/ui/form'
 import { FormCombobox, FormInput } from '@/components/Form'
 import { usePost, useToast, useFetch } from '@/hooks'
 import { Button } from '@/components/ui/button'
+import {
+	currencyFormatter,
+	formatNumber,
+	numberFormatter,
+} from '../orders/Orders'
 
 const formSchema = z.object({
 	num_licitacion: z.string().optional(),
@@ -286,26 +291,90 @@ export const Contracts = () => {
 											accessorKey: 'art_mc_nom',
 										},
 										{ header: 'Presentación', accessorKey: 'presentacion' },
-										{ header: 'marca', accessorKey: 'marca' },
+										{ header: 'Marca', accessorKey: 'marca' },
 										{
 											header: 'Precio unitario (Sin IVA)',
 											accessorKey: 'precio',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
 										},
-										{ header: 'Mínimo', accessorKey: 'min' },
-										{ header: 'Máximo', accessorKey: 'max' },
-										{ header: 'Ampliado', accessorKey: 'ampliado' },
-										{ header: 'Pedidos', accessorKey: 'pedidos' },
-										{ header: 'Porcentaje', accessorKey: 'porcentaje' },
-										{ header: 'Consumido', accessorKey: 'consumido' },
-										{ header: 'Reservado', accessorKey: 'reservada' },
-										{ header: 'Reasignado', accessorKey: 'reasignada' },
-										{ header: 'Disponible', accessorKey: 'disponible' },
-										{ header: '$ Mínimo', accessorKey: 'minio_dinero' },
-										{ header: '$ Máximo', accessorKey: 'maximo_dinero' },
-										{ header: '$ Consumo', accessorKey: 'consumo' },
+										{
+											header: 'Mínimo',
+											accessorKey: 'min',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Máximo',
+											accessorKey: 'max',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Ampliado',
+											accessorKey: 'ampliado',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Pedidos',
+											accessorKey: 'pedidos',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Porcentaje',
+											accessorKey: 'porcentaje',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Consumido',
+											accessorKey: 'consumido',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Reservado',
+											accessorKey: 'reservada',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Reasignado',
+											accessorKey: 'reasignada',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Disponible',
+											accessorKey: 'disponible',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: '$ Mínimo',
+											accessorKey: 'minio_dinero',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: '$ Máximo',
+											accessorKey: 'maximo_dinero',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: '$ Consumo',
+											accessorKey: 'consumo',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
 										{
 											header: '$ Disponible',
 											accessorKey: 'disponible_dinero',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
 										},
 										{ header: 'Código (lic)', accessorKey: 'codigo' },
 										{ header: 'Fecha', accessorKey: 'fecha' },

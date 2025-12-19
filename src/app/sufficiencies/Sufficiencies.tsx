@@ -19,6 +19,11 @@ import { FormCombobox, FormInput } from '@/components/Form'
 import { useFetch, usePost, useToast } from '@/hooks'
 import { Button } from '@/components/ui/button'
 import { SufficienciesType } from '@/types'
+import {
+	currencyFormatter,
+	formatNumber,
+	numberFormatter,
+} from '../orders/Orders'
 
 const formSchema = z.object({
 	cod_bar_mc_pr: z.string().optional(),
@@ -241,18 +246,63 @@ export const Sufficiencies = () => {
 											header: 'Descripción del articulo',
 											accessorKey: 'alm_art_desc',
 										},
-										{ header: 'Cantidad licitada', accessorKey: 'cant_lici' },
-										{ header: 'Cantidad supre', accessorKey: 'cantidad' },
+										{
+											header: 'Cantidad licitada',
+											accessorKey: 'cant_lici',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Cantidad supre',
+											accessorKey: 'cantidad',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
 
-										{ header: 'Costo licitacion', accessorKey: 'cost_lici' },
-										{ header: 'Costo supre', accessorKey: 'costo' },
+										{
+											header: 'Costo licitacion',
+											accessorKey: 'cost_lici',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: 'Costo supre',
+											accessorKey: 'costo',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
 
 										{ header: 'Fecha', accessorKey: 'fech_cier' },
-										{ header: 'Impuesto 1', accessorKey: 'iva' },
-										{ header: 'Impuesto 2', accessorKey: 'impuesto2' },
-										{ header: 'Otro impuesto', accessorKey: 'otro_impuesto' },
-										{ header: 'Total supre', accessorKey: 'total' },
-										{ header: 'Total licitado', accessorKey: 'tota_lici' },
+										{
+											header: 'Impuesto 1',
+											accessorKey: 'iva',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Impuesto 2',
+											accessorKey: 'impuesto2',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Otro impuesto',
+											accessorKey: 'otro_impuesto',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: 'Total supre',
+											accessorKey: 'total',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: 'Total licitado',
+											accessorKey: 'tota_lici',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
 										{
 											header: 'Presupuesto',
 											accessorKey: 'clave_presupuestal',
