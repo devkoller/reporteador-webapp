@@ -351,6 +351,24 @@ export const Orders = () => {
 										{ header: 'Descripcion', accessorKey: 'articulo' },
 										{ header: 'Partida', accessorKey: 'partida' },
 										{
+											header: '$ Precio S/I',
+											accessorKey: 'precio_si',
+											cell: (info) =>
+												formatNumber(info.getValue(), currencyFormatter),
+										},
+										{
+											header: '(%)IVA',
+											accessorKey: 'iva',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
+											header: '(%)IEPS',
+											accessorKey: 'porciento_ieps',
+											cell: (info) =>
+												formatNumber(info.getValue(), numberFormatter),
+										},
+										{
 											header: '$ Precio C/I',
 											accessorKey: 'precio_ci',
 											cell: (info) =>
